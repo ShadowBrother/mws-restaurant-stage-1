@@ -149,10 +149,25 @@ class DBHelper {
   /**
    * Restaurant image URL.
    */
-  static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    static imageUrlForRestaurant(restaurant) {
+        return (`/img/${restaurant.photograph}`);
   }
-
+  /**
+   * Restaurant image srcset.
+   */
+    static imageSrcsetForRestaurant(restaurant){
+        const imgSizes = [640, 768, 1024, 1366, 1600, 1920];
+        const img = restaurant.photograph;
+        const fileRX = /(.+)(\.[\w]{3,4})/;
+        const [,imgName, imgExt] = fileRX.exec(img);
+        //console.log(imgName,imgExt);
+        let imgStr = "";
+        for(let size of imgSizes) {
+            imgStr += '/img/' + imgName + '-' + size + imgExt + " " + size + 'w, ';
+        }
+        //console.log(imgStr);
+        return imgStr.slice(0,-1)//remove extra ',';
+    }
   /**
    * Map marker for a restaurant.
    */

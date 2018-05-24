@@ -82,13 +82,13 @@ module.exports = function(grunt) {
       },
     },
 
-    /* Copy the "fixed" images that don't go through processing into the images/directory */
+    /* Copy images to build */
     copy: {
       build: {
         files: [{
           expand: true,
-          src: 'img/fixed/*.{gif,jpg,png}',
-          dest: 'build/img/fixed/',
+          src: 'img/*.{gif,jpg,png}',
+          dest: 'build/img/',
 		  flatten:true
         },
         {
@@ -104,10 +104,20 @@ module.exports = function(grunt) {
         },
         ]
       },
+      noUglify: {
+        files: [{
+            expand: true,
+            src: 'js/*',
+            dest: 'build/js/',
+            flatten: true,
+          },]
+      },
     },
     concat: {
         options: {
             separator: ';\n',
+            sourceMap: true,
+            sourceMapIncludeSources: true,
         },
         main: {
             src: ['js/dbhelper.js','js/main.js'],
@@ -122,7 +132,8 @@ module.exports = function(grunt) {
     },
     uglify: {
         options: {
-            
+            sourceMap: true,
+            sourceMapIncludeSources: true,
         },
         build: {
             files: {
@@ -137,8 +148,8 @@ module.exports = function(grunt) {
         },
         build: {
             files: {
-                'build/js/main.js': 'build/js/main.js',
-                'build/js/restaurant_info.js': 'build/js/restaurant_info.js'
+                'build/js/main.js': ['build/js/main.js'],
+                'build/js/restaurant_info.js': ['build/js/restaurant_info.js']
             }
         }
     },
@@ -150,6 +161,8 @@ module.exports = function(grunt) {
                 src: ['css/*.css'],
                 ext: '.min.css',
                 flatten: true,
+                sourceMap: true,
+                sourceMapIncludeSources: true,
             }
             ]
         }
@@ -164,6 +177,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-mkdir');
   grunt.loadNpmTasks('grunt-responsive-images');
-  grunt.registerTask('default', ['clean', 'mkdir', 'copy', 'concat', 'babel', 'uglify', 'clean:js', 'cssmin', 'responsive_images']);
-
+  grunt.registerTask('default', ['clean', 'mkdir', 'copy:build', 'concat', 'babel', 'uglify', 'clean:js', 'cssmin', 'responsive_images']);
+  grunt.registerTask('noUglify', ['clean', 'mkdir', 'copy', 'concat', 'babel', 'cssmin', 'responsive_images']);
+  grunt.registerTask('noBabel', ['clean', 'mkdir', 'copy:build', 'concat', 'cssmin', 'responsive_images']);
 };
