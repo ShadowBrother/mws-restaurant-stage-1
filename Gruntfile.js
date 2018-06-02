@@ -102,6 +102,12 @@ module.exports = function(grunt) {
             src: '*.{html,md}',
             dest: 'build/'
         },
+        {
+            expand: true,
+            src: 'js/sw/*',
+            dest: 'build/',
+            flatten: true,
+        },
         ]
       },
       noUglify: {
