@@ -108,6 +108,12 @@ module.exports = function(grunt) {
             dest: 'build/',
             flatten: true,
         },
+        {
+            expand: true,
+            src: 'js/dbhelper.js',
+            dest: 'build/',
+            flatten: true,
+        },
         ]
       },
       noUglify: {
@@ -172,7 +178,7 @@ module.exports = function(grunt) {
             }
             ]
         }
-    }
+    },
   });
   
   grunt.loadNpmTasks('grunt-babel');

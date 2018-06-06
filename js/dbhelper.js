@@ -8,7 +8,7 @@ class DBHelper {
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    const port = 8000 // Change this to your server port
+      const port = 8000; // Change this to your server port
     return `http://localhost:${port}/data/restaurants.json`;
   }
 
@@ -30,6 +30,22 @@ class DBHelper {
     };
     xhr.send();
   }
+
+    /**
+    * Fetch all restaurants using fetch.
+    */
+    static FetchRestaurants(){
+        return fetch(DBHelper.DATABASE_URL)
+            .then(response => {
+                return response.json();
+                //callback(null, response.json().restaurants);
+            })
+            .catch(err =>{
+                console.log(err);
+                return err;
+
+            });
+    }
 
   /**
    * Fetch a restaurant by its ID.
@@ -91,7 +107,7 @@ class DBHelper {
       if (error) {
         callback(error, null);
       } else {
-        let results = restaurants
+          let results = restaurants;
         if (cuisine != 'all') { // filter by cuisine
           results = results.filter(r => r.cuisine_type == cuisine);
         }
@@ -113,9 +129,9 @@ class DBHelper {
         callback(error, null);
       } else {
         // Get all neighborhoods from all restaurants
-        const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood)
+          const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood);
         // Remove duplicates from neighborhoods
-        const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)
+          const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i);
         callback(null, uniqueNeighborhoods);
       }
     });
@@ -131,9 +147,9 @@ class DBHelper {
         callback(error, null);
       } else {
         // Get all cuisines from all restaurants
-        const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type)
+          const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type);
         // Remove duplicates from cuisines
-        const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i)
+          const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i);
         callback(null, uniqueCuisines);
       }
     });
@@ -166,7 +182,23 @@ class DBHelper {
             imgStr += '/img/' + imgName + '-' + size + imgExt + " " + size + 'w, ';
         }
         //console.log(imgStr);
-        return imgStr.slice(0,-1)//remove extra ',';
+        return imgStr.slice(0,-1);//remove extra ',';
+    }
+    /**
+   * Restaurant image urls.
+   */
+    static imgUrlsArrayForRestaurants(restaurant){
+        const imgSizes = [640, 768, 1024, 1366, 1600, 1920];
+        const img = restaurant.photograph;
+        const fileRX = /(.+)(\.[\w]{3,4})/;
+        const [,imgName, imgExt] = fileRX.exec(img);
+        //console.log(imgName,imgExt);
+        let imgArray = [];
+        for(let size of imgSizes) {
+            imgArray.push('/img/' + imgName + '-' + size + imgExt);
+        }
+        //console.log(imgStr);
+        return imgArray;
     }
   /**
    * Map marker for a restaurant.

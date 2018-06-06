@@ -1,7 +1,10 @@
-let staticCache = 'restaurant-static-v2';
-let imgCache = 'restaurant-imgs';
+importScripts('dbhelper.js');
 
-let allCaches = [staticCache, imgCache];
+let staticCache = 'restaurant-static-v6';
+let imgCache = 'restaurant-imgs-v1';
+let mapCache = 'restaurant-map-v1';
+let mapUrl = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCfUFYugCYuCXWWUINNPx8sMiWUN1CgZNc&libraries=places&callback=initMap";
+let allCaches = [staticCache, imgCache, mapCache];
 
 self.addEventListener('install', event => {
     console.log('service worker installing');
@@ -11,11 +14,19 @@ self.addEventListener('install', event => {
                 '/js/main.js',
                 '/js/restaurant_info.js',
                 '/css/styles.min.css',
-                'data/restaurants.json'
-                
+                '/data/restaurants.json'
+
             ]);
-        }))
-});
+
+        }).then(caches.open(mapCache).then(cache => fetch(mapUrl, { mode: 'no-cors' })
+            .then(response => { return cache.put(mapUrl, response); })))
+        .then(caches.open(imgCache).then(cache => {
+            return DBHelper.FetchRestaurants().then(json => {
+                let restaurants = json.restaurants;
+                console.log(restaurants);
+                return cache.addAll(restaurants.map(restaurant => DBHelper.imgUrlsArrayForRestaurants(restaurant)).reduce((a, b) => a.concat(b)));
+            });
+        })));});
 
 self.addEventListener('activate', event => {
     console.log('service worker activating');
@@ -26,15 +37,15 @@ self.addEventListener('activate', event => {
                     return cacheName.startsWith('restaurant-') && !allCaches.includes(cacheName);
                 }).map(cacheName => {
                     return caches.delete(cacheName);
-                }))
-        }))
+                }));
+        }));
 });
 
 self.addEventListener('fetch', event => {
-    console.log('service worker fetching');
+    //console.log('service worker fetching');
     let requestUrl = new URL(event.request.url);
 
-    console.log("request origin", requestUrl.origin);
+    //console.log("request origin", requestUrl.origin);
     if (requestUrl.origin === location.origin) {
         if (requestUrl.pathname.startsWith('img/')) {
             event.respondWith(serveImg(event.request));
@@ -63,7 +74,7 @@ const serveImg = request => {
                 console.log("getting img from net", request);
                 return netReponse;
             });
-        })
+        });
     });
 
-}
+};
