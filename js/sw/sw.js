@@ -54,7 +54,7 @@ self.addEventListener('fetch', event => {
         return;
     }
     */
-    console.log("request origin", requestUrl.origin);
+    //console.log("request origin", requestUrl.origin);
     if (requestUrl.origin === location.origin) {
         if (requestUrl.pathname.startsWith('img/')) {
             event.respondWith(serveImg(event.request));
