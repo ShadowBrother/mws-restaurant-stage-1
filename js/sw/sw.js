@@ -1,8 +1,8 @@
 importScripts('dbhelper.js');
 
-let staticCache = 'restaurant-static-v6';
-let imgCache = 'restaurant-imgs-v1';
-let mapCache = 'restaurant-map-v1';
+let staticCache = 'restaurant-static-v9';
+let imgCache = 'restaurant-imgs-v5';
+let mapCache = 'restaurant-map-v2';
 let mapUrl = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCfUFYugCYuCXWWUINNPx8sMiWUN1CgZNc&libraries=places&callback=initMap";
 let allCaches = [staticCache, imgCache, mapCache];
 
@@ -11,10 +11,14 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(staticCache).then(cache => {
             return cache.addAll([
+                '/',
                 '/js/main.js',
                 '/js/restaurant_info.js',
                 '/css/styles.min.css',
-                '/data/restaurants.json'
+                '/data/restaurants.json',
+                'dbhelper.js',
+                'sw.js'
+
 
             ]);
 
@@ -45,13 +49,19 @@ self.addEventListener('fetch', event => {
     //console.log('service worker fetching');
     let requestUrl = new URL(event.request.url);
 
-    //console.log("request origin", requestUrl.origin);
+    //avoid devtools bug error
+   /* if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
+        return;
+    }
+    */
+    console.log("request origin", requestUrl.origin);
     if (requestUrl.origin === location.origin) {
         if (requestUrl.pathname.startsWith('img/')) {
             event.respondWith(serveImg(event.request));
             return;
         }
     }
+    
     event.respondWith(
         caches.match(event.request).then(response => {
             return response || fetch(event.request);
@@ -61,8 +71,8 @@ self.addEventListener('fetch', event => {
 const serveImg = request => {
 
     console.log("serveImg");
-    let storageUrl = request.url.replace(/-\d+px\.jpg$/, '');
-
+    //let storageUrl = request.url.replace(/-\d+px\.jpg$/, '');
+    let storageUrl = request.url;
     return caches.open(imgCache).then(cache => {
         return cache.match(storageUrl).then(response => {
             if (response) {
