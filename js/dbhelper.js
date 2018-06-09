@@ -193,11 +193,11 @@ class DBHelper {
         const fileRX = /(.+)(\.[\w]{3,4})/;
         const [,imgName, imgExt] = fileRX.exec(img);
         //console.log(imgName,imgExt);
-        let imgArray = [];
+        let imgArray = [DBHelper.imageUrlForRestaurant(restaurant)];
         for(let size of imgSizes) {
             imgArray.push('/img/' + imgName + '-' + size + imgExt);
         }
-        //console.log(imgStr);
+        //console.log(imgArray);
         return imgArray;
     }
   /**
