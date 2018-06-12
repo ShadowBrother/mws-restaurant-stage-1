@@ -143,6 +143,11 @@ nav h1 a {
     height: 1px;
     overflow: hidden;}
 
+#skip-link {
+    z-index: 2000;
+    position: fixed;
+}
+
 /* ====================== Restaurant Listing ====================== */
 #restaurants-list {
   background-color: #f3f3f3;
