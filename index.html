@@ -10,6 +10,7 @@
 </head>
 
 <body>
+    <a id="skip-link" href="#filter-options" class="hidden" onfocus="this.classList.remove('hidden')" onfocusout="this.classList.add('hidden')">Skip to main content</a>
   <header>
     <nav>
       <h1><a href="/">Restaurant Reviews</a></h1>
@@ -17,16 +18,18 @@
   </header>
 
   <main id="maincontent">
-    <section id="map-container">
+    <section id="map-container" aria-hidden="true">
       <div id="map"></div>
     </section>
     <section>
-      <div class="filter-options">
+      <div id="filter-options" class="filter-options">
         <h2>Filter Results</h2>
+        <label for="neighborhoods-select" class="hidden">Neighborhood Select</label>
         <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
           <option value="all">All Neighborhoods</option>
         </select>
-        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
+          <label for="cuisines-select" class="hidden">Cuisine Select</label>
+          <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
           <option value="all">All Cuisines</option>
         </select>
       </div>

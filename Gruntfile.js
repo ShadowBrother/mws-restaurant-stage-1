@@ -189,7 +189,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-mkdir');
   grunt.loadNpmTasks('grunt-responsive-images');
-  grunt.registerTask('default', ['clean', 'mkdir', 'copy:build', 'concat', 'babel', 'uglify', 'clean:js', 'cssmin', 'responsive_images']);
-  grunt.registerTask('noUglify', ['clean', 'mkdir', 'copy', 'concat', 'babel', 'cssmin', 'responsive_images']);
-  grunt.registerTask('noBabel', ['clean', 'mkdir', 'copy:build', 'concat', 'cssmin', 'responsive_images']);
+  grunt.registerTask('babelUglify', ['clean', 'mkdir', 'copy:build', 'concat', 'babel', 'uglify', 'clean:js', 'cssmin', 'responsive_images']);
+  grunt.registerTask('babel', ['clean', 'mkdir', 'copy', 'concat', 'babel', 'cssmin', 'responsive_images']);
+  grunt.registerTask('default', ['clean', 'mkdir', 'copy:build', 'concat', 'cssmin', 'responsive_images']);
 };
