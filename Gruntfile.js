@@ -114,6 +114,12 @@ module.exports = function(grunt) {
             dest: 'build/',
             flatten: true,
         },
+        {
+            expand: true,
+            src: 'css/*.css',
+            dest: 'build/css/',
+            flatten: true,
+        },
         ]
       },
       noUglify: {
@@ -191,5 +197,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-responsive-images');
   grunt.registerTask('babelUglify', ['clean', 'mkdir', 'copy:build', 'concat', 'babel', 'uglify', 'clean:js', 'cssmin', 'responsive_images']);
   grunt.registerTask('babel', ['clean', 'mkdir', 'copy', 'concat', 'babel', 'cssmin', 'responsive_images']);
-  grunt.registerTask('default', ['clean', 'mkdir', 'copy:build', 'concat', 'cssmin', 'responsive_images']);
+  grunt.registerTask('default', ['clean', 'mkdir', 'copy:build', 'concat', 'responsive_images']);
 };
