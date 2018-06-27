@@ -3,6 +3,7 @@
 
 /build
 /node_modules
+/gulp
 
 # Compiled source #
 ###################
