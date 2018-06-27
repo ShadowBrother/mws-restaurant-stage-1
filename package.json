@@ -9,6 +9,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "browser-sync": "^2.24.4",
+    "del": "^3.0.0",
     "eslint": "^4.19.1",
     "gm": "^1.23.1",
     "grunt": "^1.0.3",

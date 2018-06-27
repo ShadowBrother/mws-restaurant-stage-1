@@ -1,5 +1,6 @@
 /*eslint-env node */
 
+
 var gulp = require('gulp');
 var autoprefixer = require('gulp-autoprefixer');
 var concat = require('gulp-concat');
@@ -8,7 +9,7 @@ var responsiveImages = require('gulp-responsive-images');
 var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
 var browserSync = require('browser-sync').create();
-
+var del = require('del');
 
 gulp.task('default', ['styles', 'lint'], function() {
 	gulp.watch('sass/**/*.scss', ['styles']);
@@ -19,13 +20,15 @@ gulp.task('default', ['styles', 'lint'], function() {
 	});
 });
 
+gulp.task('build', ['clean','copy', 'copy:img', 'copy:data', 'responsiveImages', 'styles', 'concat:js']);
+
 gulp.task('styles', function() {
 	gulp.src('sass/**/*.scss')
 		.pipe(sass().on('error', sass.logError))
 		.pipe(autoprefixer({
 			browsers: ['last 2 versions']
 		}))
-		.pipe(gulp.dest('gulp/css'))
+		.pipe(gulp.dest('build/css'))
 		.pipe(browserSync.stream());
 });
 
@@ -42,6 +45,40 @@ gulp.task('lint', function () {
 		.pipe(eslint.failOnError());
 });
 
+gulp.task('clean', function(){
+    return del.sync(['build']);
+});
+
+
+
+gulp.task('concat:main', function(){
+    return gulp.src(['js/dbhelper.js','js/main.js'])
+        .pipe(concat('main.js'))
+        .pipe(gulp.dest('build/js/'));
+});
+
+gulp.task('concat:restaurant', function(){
+    return gulp.src(['js/dbhelper.js','js/restaurant_info.js'])
+        .pipe(concat('restaurant_info.js'))
+            .pipe(gulp.dest('build/js/'));
+});
+
+gulp.task('concat:js', ['concat:main', 'concat:restaurant']);
+
+gulp.task('copy', function(){
+   return gulp.src(['js/sw/sw.js','js/dbhelper.js','*.{html,md}'])
+    .pipe(gulp.dest('build'));   
+});
+
+gulp.task('copy:img', function(){
+    return gulp.src(['img/**/*'])
+    .pipe(gulp.dest('build/img'));
+});
+
+gulp.task('copy:data', function(){
+    return gulp.src('data/*')
+    .pipe(gulp.dest('build/data'));
+});
 gulp.task('responsiveImages', function(){
     return gulp.src('img/*')
     .pipe(responsiveImages({
@@ -81,5 +118,5 @@ gulp.task('responsiveImages', function(){
             suffix:'-1920'
     }]
     }))
-    .pipe(gulp.dest('gulp/img/'));
+    .pipe(gulp.dest('build/img/'));
 });
