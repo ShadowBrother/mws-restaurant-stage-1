@@ -11,10 +11,15 @@ class DBHelper {
       const port = 8000; // Change this to your server port
     return `http://localhost:${port}/data/restaurants.json`;
   }
-
+  
+    static get API_URL() {
+        const port = 1337; // Change this to your server port
+        return `http://localhost:${port}/restaurants`;
+    }
   /**
    * Fetch all restaurants.
    */
+    /*
   static fetchRestaurants(callback) {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', DBHelper.DATABASE_URL);
@@ -30,10 +35,23 @@ class DBHelper {
     };
     xhr.send();
   }
-
+  */
     /**
     * Fetch all restaurants using fetch.
     */
+    static fetchRestaurants(callback) {
+        return fetch(DBHelper.API_URL)
+        .then(response => {
+            console.log("fetchRestuarants: ",response.clone().json());
+            return response.json();
+        })
+        .then(json => {
+            console.log("fetchRestaurants .then json: ", json);
+            callback(null, json);
+        })        
+        .catch(err => callback(err, null));
+    }
+
     static FetchRestaurants(){
         return fetch(DBHelper.DATABASE_URL)
             .then(response => {
@@ -50,6 +68,17 @@ class DBHelper {
   /**
    * Fetch a restaurant by its ID.
    */
+    static fetchRestaurantById(id, callback){
+        return fetch(DBHelper.API_URL + `/${id}`)
+        .then(response => {
+            return response.json();
+        }).
+        then(json => callback(null, json))
+        .catch(err => callback(err, null));
+        
+    }
+
+    /*
   static fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
     DBHelper.fetchRestaurants((error, restaurants) => {
@@ -65,6 +94,7 @@ class DBHelper {
       }
     });
   }
+  */
 
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
@@ -128,6 +158,7 @@ class DBHelper {
       if (error) {
         callback(error, null);
       } else {
+          console.log("fetchNeighborhoods restaurants: ", restaurants);
         // Get all neighborhoods from all restaurants
           const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood);
         // Remove duplicates from neighborhoods
@@ -166,7 +197,7 @@ class DBHelper {
    * Restaurant image URL.
    */
     static imageUrlForRestaurant(restaurant) {
-        return (`/img/${restaurant.photograph}`);
+        return (`/img/${restaurant.photograph}.jpg`);
   }
   /**
    * Restaurant image srcset.
@@ -174,8 +205,10 @@ class DBHelper {
     static imageSrcsetForRestaurant(restaurant){
         const imgSizes = [640, 768, 1024, 1366, 1600, 1920];
         const img = restaurant.photograph;
-        const fileRX = /(.+)(\.[\w]{3,4})/;
-        const [,imgName, imgExt] = fileRX.exec(img);
+        //const fileRX = /(.+)(\.[\w]{3,4})/;
+        //const [,imgName, imgExt] = fileRX.exec(img);
+        const imgName = img;
+        const imgExt  ='.jpg';
         //console.log(imgName,imgExt);
         let imgStr = "";
         for(let size of imgSizes) {
