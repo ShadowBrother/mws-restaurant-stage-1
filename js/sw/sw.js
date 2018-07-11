@@ -26,9 +26,13 @@ self.addEventListener('install', event => {
             .then(response => { return cache.put(mapUrl, response); })))
         .then(caches.open(imgCache).then(cache => {
             return DBHelper.FetchRestaurants().then(json => {
-                let restaurants = json.restaurants;
-                console.log(restaurants);
-                return cache.addAll(restaurants.map(restaurant => DBHelper.imgUrlsArrayForRestaurants(restaurant)).reduce((a, b) => a.concat(b)));
+                let restaurants = json;
+                //console.log('cache imgs, restaurants: ', restaurants);
+                return cache.addAll(restaurants.map(restaurant => {
+                    let imgUrls = DBHelper.imgUrlsArrayForRestaurants(restaurant);
+                    //console.log(`cache imgs, ${restaurant}: ${imgUrls}`);
+                    return imgUrls;
+                }).reduce((a, b) => a.concat(b)));
             });
         })));});
 

@@ -42,18 +42,21 @@ class DBHelper {
     static fetchRestaurants(callback) {
         return fetch(DBHelper.API_URL)
         .then(response => {
-            console.log("fetchRestuarants: ",response.clone().json());
+            //console.log("fetchRestuarants: ",response.clone().json());
             return response.json();
         })
         .then(json => {
-            console.log("fetchRestaurants .then json: ", json);
+            //console.log("fetchRestaurants .then json: ", json);
             callback(null, json);
         })        
         .catch(err => callback(err, null));
     }
 
+    /**
+  * Fetch all restaurants using fetch, without using a callback
+  */
     static FetchRestaurants(){
-        return fetch(DBHelper.DATABASE_URL)
+        return fetch(DBHelper.API_URL)
             .then(response => {
                 return response.json();
                 //callback(null, response.json().restaurants);
@@ -158,7 +161,7 @@ class DBHelper {
       if (error) {
         callback(error, null);
       } else {
-          console.log("fetchNeighborhoods restaurants: ", restaurants);
+          //console.log("fetchNeighborhoods restaurants: ", restaurants);
         // Get all neighborhoods from all restaurants
           const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood);
         // Remove duplicates from neighborhoods
@@ -197,14 +200,14 @@ class DBHelper {
    * Restaurant image URL.
    */
     static imageUrlForRestaurant(restaurant) {
-        return (`/img/${restaurant.photograph}.jpg`);
+        return (`/img/${restaurant.photograph || restaurant.id}.jpg`);
   }
   /**
    * Restaurant image srcset.
    */
     static imageSrcsetForRestaurant(restaurant){
         const imgSizes = [640, 768, 1024, 1366, 1600, 1920];
-        const img = restaurant.photograph;
+        const img = restaurant.photograph || restaurant.id;
         //const fileRX = /(.+)(\.[\w]{3,4})/;
         //const [,imgName, imgExt] = fileRX.exec(img);
         const imgName = img;
@@ -222,9 +225,11 @@ class DBHelper {
    */
     static imgUrlsArrayForRestaurants(restaurant){
         const imgSizes = [640, 768, 1024, 1366, 1600, 1920];
-        const img = restaurant.photograph;
+        const img = restaurant.photograph || restaurant.id;
         const fileRX = /(.+)(\.[\w]{3,4})/;
-        const [,imgName, imgExt] = fileRX.exec(img);
+        //const [,imgName, imgExt] = fileRX.exec(img);
+        const imgName = img;
+        const imgExt = '.jpg';
         //console.log(imgName,imgExt);
         let imgArray = [DBHelper.imageUrlForRestaurant(restaurant)];
         for(let size of imgSizes) {

@@ -20,7 +20,7 @@ gulp.task('default', ['styles', 'lint'], function() {
 	});
 });
 
-gulp.task('build', ['clean','copy', 'copy:img', 'copy:data', 'responsiveImages', 'styles', 'concat:js']);
+gulp.task('build', ['clean','copy', 'copy:img', 'responsiveImages', 'styles', 'concat:js']);
 
 gulp.task('styles', function() {
 	gulp.src('sass/**/*.scss')
@@ -75,10 +75,6 @@ gulp.task('copy:img', function(){
     .pipe(gulp.dest('build/img'));
 });
 
-gulp.task('copy:data', function(){
-    return gulp.src('data/*')
-    .pipe(gulp.dest('build/data'));
-});
 gulp.task('responsiveImages', function(){
     return gulp.src('img/*')
     .pipe(responsiveImages({
