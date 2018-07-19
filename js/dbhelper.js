@@ -7,7 +7,7 @@ class DBHelper {
      * Database URL.
      * Change this to restaurants.json file location on your server.
      */
-    
+
     static get DATABASE_URL() {
         const port = 8000; // Change this to your server port
         return `http://localhost:${port}/data/restaurants.json`;
@@ -25,12 +25,12 @@ class DBHelper {
             return Promise.resolve();
         }
         console.log('openDatabase');
-        return idb.open('test-db', 1, function (upgradeDb) {
-            var store = upgradeDb.createObjectStore('keyValStore', {
+        return idb.open('restaurant-db', 1, function (upgradeDb) {
+            var store = upgradeDb.createObjectStore('keyval', {
                 keyPath: 'id'
             });
-            console.log('keyValStore: ', store);
-            //store.createIndex('by-date', 'time');
+            console.log('keyval: ', store);
+            store.createIndex('by-id', 'id');
         });
     }
 
@@ -39,32 +39,82 @@ class DBHelper {
         return DBHelper.openDatabase();
     }
 
+    
+    //idb code adapted from https://github.com/jakearchibald/idb
+
+    static getVal(key){
+        return DBHelper.dbPromise.then(db => {
+            return db.transaction('keyval').objectStore('keyval').get(key);
+        });
+    }
+
+    static setVal(val){
+        return DBHelper.dbPromise.then(db => {
+            const tx = db.transaction('keyval', 'readwrite');
+            tx.objectStore('keyval').put(val);
+            return tx.complete;
+        });
+    }
+
+    static deleteVal(key) {
+        return dbPromise.then(db => {
+            const tx = db.transaction('keyval', 'readwrite');
+            tx.objectStore('keyval').delete(key);
+            return tx.complete;
+        });
+    }
+
+    static clearStore() {
+        return dbPromise.then(db => {
+            const tx = db.transaction('keyval', 'readwrite');
+            tx.objectStore('keyval').clear();
+            return tx.complete;
+        });
+    }
+
+    static getKeys(){
+        return DBHelper.dbPromise.then(db => {
+            const tx = db.transaction('keyval');
+            const keys = [];
+            const store = tx.objectStore('keyval');
+
+            (store.iterateKeyCursor || store.iterateCursor).call(store, cursor => {
+                if(!cursor) return;
+                keys.push(cursor.key);
+                cursor.continue();
+            });
+            return tx.complete.then(() => keys);
+        });
+    }
+
 
     /**
      * Fetch all restaurants.
      */
-      /*
+    /*
     static fetchRestaurants(callback) {
-      let xhr = new XMLHttpRequest();
-      xhr.open('GET', DBHelper.DATABASE_URL);
-      xhr.onload = () => {
-        if (xhr.status === 200) { // Got a success response from server!
-          const json = JSON.parse(xhr.responseText);
-          const restaurants = json.restaurants;
-          callback(null, restaurants);
-        } else { // Oops!. Got an error from server.
-          const error = (`Request failed. Returned status of ${xhr.status}`);
-          callback(error, null);
-        }
-      };
-      xhr.send();
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', DBHelper.DATABASE_URL);
+    xhr.onload = () => {
+      if (xhr.status === 200) { // Got a success response from server!
+        const json = JSON.parse(xhr.responseText);
+        const restaurants = json.restaurants;
+        callback(null, restaurants);
+      } else { // Oops!. Got an error from server.
+        const error = (`Request failed. Returned status of ${xhr.status}`);
+        callback(error, null);
+      }
+    };
+    xhr.send();
     }
     */
-      /**
-      * Fetch all restaurants using fetch.
-      */
+    /**
+    * Fetch all restaurants using fetch.
+    */
     static fetchRestaurants(callback) {
         console.log(DBHelper.dbPromise);
+        console.log(DBHelper.setVal({id: 1, name: "one" }));
+        console.log(DBHelper.getKeys());
         return fetch(DBHelper.API_URL)
         .then(response => {
             //console.log("fetchRestuarants: ",response.clone().json());
@@ -73,20 +123,20 @@ class DBHelper {
         .then(json => {
             //console.log("fetchRestaurants .then json: ", json);
             callback(null, json);
-        })        
+        })
         .catch(err => callback(err, null));
     }
 
     /**
-  * Fetch all restaurants using fetch, without using a callback
-  */
-    static FetchRestaurants(){
+    * Fetch all restaurants using fetch, without using a callback
+    */
+    static FetchRestaurants() {
         return fetch(DBHelper.API_URL)
             .then(response => {
                 return response.json();
                 //callback(null, response.json().restaurants);
             })
-            .catch(err =>{
+            .catch(err => {
                 console.log(err);
                 return err;
 
@@ -96,18 +146,18 @@ class DBHelper {
     /**
      * Fetch a restaurant by its ID.
      */
-    static fetchRestaurantById(id, callback){
+    static fetchRestaurantById(id, callback) {
         return fetch(DBHelper.API_URL + `/${id}`)
         .then(response => {
             return response.json();
         }).
         then(json => callback(null, json))
         .catch(err => callback(err, null));
-        
+
     }
 
     /*
-  static fetchRestaurantById(id, callback) {
+    static fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
@@ -121,8 +171,8 @@ class DBHelper {
         }
       }
     });
-  }
-  */
+    }
+    */
 
     /**
      * Fetch restaurants by a cuisine type with proper error handling.
@@ -230,25 +280,25 @@ class DBHelper {
     /**
      * Restaurant image srcset.
      */
-    static imageSrcsetForRestaurant(restaurant){
+    static imageSrcsetForRestaurant(restaurant) {
         const imgSizes = [640, 768, 1024, 1366, 1600, 1920];
         const img = restaurant.photograph || restaurant.id;
         //const fileRX = /(.+)(\.[\w]{3,4})/;
         //const [,imgName, imgExt] = fileRX.exec(img);
         const imgName = img;
-        const imgExt  ='.jpg';
+        const imgExt = '.jpg';
         //console.log(imgName,imgExt);
         let imgStr = "";
         for(let size of imgSizes) {
             imgStr += '/img/' + imgName + '-' + size + imgExt + " " + size + 'w, ';
         }
         //console.log(imgStr);
-        return imgStr.slice(0,-1);//remove extra ',';
+        return imgStr.slice(0, -1);//remove extra ',';
     }
     /**
-   * Restaurant image urls.
-   */
-    static imgUrlsArrayForRestaurants(restaurant){
+    * Restaurant image urls.
+    */
+    static imgUrlsArrayForRestaurants(restaurant) {
         const imgSizes = [640, 768, 1024, 1366, 1600, 1920];
         const img = restaurant.photograph || restaurant.id;
         const fileRX = /(.+)(\.[\w]{3,4})/;
@@ -272,7 +322,8 @@ class DBHelper {
             title: restaurant.name,
             url: DBHelper.urlForRestaurant(restaurant),
             map: map,
-            animation: google.maps.Animation.DROP}
+            animation: google.maps.Animation.DROP
+        }
         );
         return marker;
     }
