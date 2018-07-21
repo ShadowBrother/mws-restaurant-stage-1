@@ -108,23 +108,46 @@ class DBHelper {
     xhr.send();
     }
     */
+
     /**
     * Fetch all restaurants using fetch.
     */
     static fetchRestaurants(callback) {
-        console.log(DBHelper.dbPromise);
-        console.log(DBHelper.setVal({id: 1, name: "one" }));
-        console.log(DBHelper.getKeys());
-        return fetch(DBHelper.API_URL)
-        .then(response => {
-            //console.log("fetchRestuarants: ",response.clone().json());
-            return response.json();
-        })
-        .then(json => {
-            //console.log("fetchRestaurants .then json: ", json);
-            callback(null, json);
-        })
-        .catch(err => callback(err, null));
+        //console.log(DBHelper.dbPromise);
+        //console.log(DBHelper.setVal({ id: 1, name: "one" }));
+        //console.log(DBHelper.setVal({ id: 2, name: "two" }));
+        //console.log(DBHelper.setVal({ id: 3, name: "three" }));
+
+        //console.log(DBHelper.getKeys());
+        let keys = DBHelper.getKeys();
+        console.log("keys: ", keys);
+        
+        let vals = keys.then(keys => keys.map(key => DBHelper.getVal(key)));
+        console.log("vals: ", vals);
+        vals.then(vals => {
+            if (vals.length > 0) {//restaurant data is in idb
+                console.log('fetchRestaurants returning from idb ', vals);
+                
+                //callback(null, vals);
+                return Promise.all(vals).then(vals => callback(null, vals));
+
+            }
+            return fetch(DBHelper.API_URL)//fetch data from api, store in idb
+            .then(response => {
+                //console.log("fetchRestuarants: ",response.clone().json());
+                return response.json();
+            })
+            .then(json => {
+                //console.log("fetchRestaurants .then json: ", json);
+                for (let restaurant of json) {
+                    console.log(`putting ${restaurant.name} in idb: `, restaurant);
+                    DBHelper.setVal(restaurant);
+                }
+                callback(null, json);
+            })
+            .catch(err => callback(err, null));
+        });
+        
     }
 
     /**

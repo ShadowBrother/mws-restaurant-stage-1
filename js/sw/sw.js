@@ -1,6 +1,6 @@
 importScripts('dbhelper.js');
 
-let staticCache = 'restaurant-static-v11';
+let staticCache = 'restaurant-static-v12';
 let imgCache = 'restaurant-imgs-v5';
 let mapCache = 'restaurant-map-v2';
 let mapUrl = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCfUFYugCYuCXWWUINNPx8sMiWUN1CgZNc&libraries=places&callback=initMap";
@@ -16,7 +16,8 @@ self.addEventListener('install', event => {
                 '/js/restaurant_info.js',
                 '/css/styles.css',
                 'dbhelper.js',
-                'sw.js'
+                'sw.js',
+                '/js/idb.js'
 
 
             ]);
