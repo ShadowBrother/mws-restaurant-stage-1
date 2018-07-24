@@ -44,7 +44,9 @@ class DBHelper {
 
     static getVal(key){
         return DBHelper.dbPromise.then(db => {
-            return db.transaction('keyval').objectStore('keyval').get(key);
+           console.log('getVal', key, typeof key);
+           return db.transaction('keyval').objectStore('keyval').get(key);
+           
         });
     }
 
@@ -170,13 +172,29 @@ class DBHelper {
      * Fetch a restaurant by its ID.
      */
     static fetchRestaurantById(id, callback) {
-        return fetch(DBHelper.API_URL + `/${id}`)
-        .then(response => {
-            return response.json();
-        }).
-        then(json => callback(null, json))
-        .catch(err => callback(err, null));
+        
+        DBHelper.getVal(parseInt(id)).then(restaurant => {//check idb for restaurant
 
+            console.log('fetchRestaurantById',restaurant);
+        
+            if (restaurant) {//if restaurant in idb, use it
+                console.log('fetchRestaurantById found in idb');
+                return Promise.resolve(restaurant).then(callback(null, restaurant));
+            }
+
+            console.log('fetchRestaurantById fetching from API');
+            return fetch(DBHelper.API_URL + `/${id}`)//restaurant not in idb, fetch from idb
+            .then(response => {
+
+                return response.json();
+            }).
+            then(json => {//store restaurant in idb
+                console.log('fetchRestaurantById adding restaurant to idb', json);
+                DBHelper.setVal(json);
+                callback(null, json);
+            })
+            .catch(err => { console.log(err); callback(err, null); });
+        }).catch(err => { console.log(err); callback(err, null); });
     }
 
     /*
