@@ -25,7 +25,7 @@ self.addEventListener('install', event => {
 
         }).then(caches.open(mapCache).then(cache => fetch(mapUrl, { mode: 'no-cors' })
             .then(response => { return cache.put(mapUrl, response); })))
-        /*.then(caches.open(imgCache).then(cache => {
+        .then(caches.open(imgCache).then(cache => {
             return DBHelper.FetchRestaurants().then(json => {
                 let restaurants = json;
                 //console.log('cache imgs, restaurants: ', restaurants);
@@ -37,7 +37,7 @@ self.addEventListener('install', event => {
                 console.log(imgCacheStr);
                 return cache.addAll(imgCacheStr);
             });
-        }))*/.catch(err => console.log(err)));});
+        })).catch(err => console.log(err)));});
 
 self.addEventListener('activate', event => {
     console.log('service worker activating');
