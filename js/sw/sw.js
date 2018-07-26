@@ -1,6 +1,6 @@
 importScripts('dbhelper.js');
 
-let staticCache = 'restaurant-static-v12';
+let staticCache = 'restaurant-static-v13';
 let imgCache = 'restaurant-imgs-v5';
 let mapCache = 'restaurant-map-v2';
 let mapUrl = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCfUFYugCYuCXWWUINNPx8sMiWUN1CgZNc&libraries=places&callback=initMap";
@@ -17,24 +17,27 @@ self.addEventListener('install', event => {
                 '/css/styles.css',
                 'dbhelper.js',
                 'sw.js',
-                '/js/idb.js'
+                '/js/idb.js',
+                'restaurant.html'
 
 
             ]);
 
         }).then(caches.open(mapCache).then(cache => fetch(mapUrl, { mode: 'no-cors' })
             .then(response => { return cache.put(mapUrl, response); })))
-        .then(caches.open(imgCache).then(cache => {
+        /*.then(caches.open(imgCache).then(cache => {
             return DBHelper.FetchRestaurants().then(json => {
                 let restaurants = json;
                 //console.log('cache imgs, restaurants: ', restaurants);
-                return cache.addAll(restaurants.map(restaurant => {
+                let imgCacheStr = restaurants.map(restaurant => {
                     let imgUrls = DBHelper.imgUrlsArrayForRestaurants(restaurant);
-                    //console.log(`cache imgs, ${restaurant}: ${imgUrls}`);
+                    console.log(`cache imgs, ${restaurant}: ${imgUrls}`);
                     return imgUrls;
-                }).reduce((a, b) => a.concat(b)));
+                }).reduce((a, b) => a.concat(b));
+                console.log(imgCacheStr);
+                return cache.addAll(imgCacheStr);
             });
-        })));});
+        }))*/.catch(err => console.log(err)));});
 
 self.addEventListener('activate', event => {
     console.log('service worker activating');
@@ -60,14 +63,15 @@ self.addEventListener('fetch', event => {
     */
     //console.log("request origin", requestUrl.origin);
     if (requestUrl.origin === location.origin) {
-        if (requestUrl.pathname.startsWith('img/')) {
+        if (requestUrl.pathname.startsWith('/img/')) {
+            console.log("img");
             event.respondWith(serveImg(event.request));
             return;
         }
     }
     
     event.respondWith(
-        caches.match(event.request).then(response => {
+        caches.match(event.request, { ignoreSearch: true }).then(response => {
             return response || fetch(event.request);
         }));
 });
@@ -86,7 +90,7 @@ const serveImg = request => {
             return fetch(request).then(netResponse => {
                 cache.put(storageUrl, netResponse.clone());
                 console.log("getting img from net", request);
-                return netReponse;
+                return netResponse;
             });
         });
     });

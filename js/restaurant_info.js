@@ -6,9 +6,10 @@ var map;
  **/
 if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js')
-    .then(registration => console.log('Registration successfull'))
+    .then(registration => console.log('Registration successfull', registration.scope))
     .catch(error => console.log('Service worker registration failed, : ', error));
 }
+
 
 /**
  * Initialize Google map, called from HTML.

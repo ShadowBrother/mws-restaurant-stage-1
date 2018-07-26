@@ -130,10 +130,12 @@ class DBHelper {
             if (vals.length > 0) {//restaurant data is in idb
                 console.log('fetchRestaurants returning from idb ', vals);
                 
-                //callback(null, vals);
-                return Promise.all(vals).then(vals => callback(null, vals));
+                Promise.all(vals).then(vals => {
+                    callback(null, vals);//use data in callback
 
-            }
+                });
+
+            }//still fetch data, in case more/newer data in api
             return fetch(DBHelper.API_URL)//fetch data from api, store in idb
             .then(response => {
                 //console.log("fetchRestuarants: ",response.clone().json());
