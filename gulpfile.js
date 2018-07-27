@@ -94,25 +94,29 @@ gulp.task('responsiveImages', function(){
 			  
 			width:1024,
 			upscale:true,
-            suffix:'-1024'
+            suffix:'-1024',
+            quality:75
 		  },
 		  {
 			  
 			width:1366,
 			upscale:true,
-            suffix:'-1366'
+            suffix:'-1366',
+            quality:75
 		  },
 		  {
 			  
 			width:1600,
 			upscale:true,
-            suffix:'-1600'
+            suffix:'-1600',
+            quality:75
 		  },
 		  {
 			  
 			width:1920,
 			upscale:true,
-            suffix:'-1920'
+            suffix:'-1920',
+            quality:75
     }]
     }))
     .pipe(gulp.dest('build/img/'));
