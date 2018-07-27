@@ -2,18 +2,21 @@
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
 
-## Project Overview: Stage 1
+## Project Overview: Stage 2
 
 For the **Restaurant Reviews** projects, I incrementally converted a static webpage to a mobile-ready web application. In 
 **Stage One**, I took a static design that lacks accessibility and converted the design to be responsive on different sized 
 displays and accessible for screen reader use. I also added a service worker to begin the process of creating a seamless 
 offline experience for users.
 
+For **Stage Two**, I made use of given sails API server to fetch data, and cached responses using IndexedDB as well as
+making necessary changes for site to pass lighthouse audit
+
 ### How to run
 
 1. Run 'npm install' to install dependencies.
 
-2. Run 'grunt' to run default grunt tasks
+2. Run 'gulp' to run default gulp tasks
 
 3. cd to newly created 'build' folder
 
@@ -25,4 +28,6 @@ SimpleHTTPServer 8000` (Use port 8000 specifically!!) For Python 3.x, you can us
 8000`. If you don't have Python installed, navigate to Python's [website](https://www.python.org/) to download and install the 
 software.
 
-5. Go to localhost:8000 in your browser.
+5. In separate terminal, navigate to location of API server and start the sails server by running 'node server'.
+
+6. Go to localhost:8000 in your browser.
