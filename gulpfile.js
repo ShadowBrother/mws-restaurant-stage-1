@@ -11,16 +11,7 @@ var uglify = require('gulp-uglify');
 var browserSync = require('browser-sync').create();
 var del = require('del');
 
-gulp.task('default', ['styles', 'lint'], function() {
-	gulp.watch('sass/**/*.scss', ['styles']);
-	gulp.watch('js/**/*.js', ['lint']);
-
-	browserSync.init({
-		server: './'
-	});
-});
-
-gulp.task('build', ['clean', 'copy', 'copy:idb', 'copy:img', 'responsiveImages', 'styles', 'concat:js']);
+gulp.task('default', ['clean', 'copy', 'copy:idb', 'copy:img', 'responsiveImages', 'styles', 'concat:js']);
 
 gulp.task('styles', function() {
 	gulp.src('sass/**/*.scss')
@@ -28,8 +19,8 @@ gulp.task('styles', function() {
 		.pipe(autoprefixer({
 			browsers: ['last 2 versions']
 		}))
-		.pipe(gulp.dest('build/css'))
-		.pipe(browserSync.stream());
+		.pipe(gulp.dest('build/css'));
+		
 });
 
 gulp.task('lint', function () {
