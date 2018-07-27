@@ -24,18 +24,18 @@ class DBHelper {
         if (!navigator.serviceWorker) {
             return Promise.resolve();
         }
-        console.log('openDatabase');
+        //console.log('openDatabase');
         return idb.open('restaurant-db', 1, function (upgradeDb) {
             var store = upgradeDb.createObjectStore('keyval', {
                 keyPath: 'id'
             });
-            console.log('keyval: ', store);
+            //console.log('keyval: ', store);
             store.createIndex('by-id', 'id');
         });
     }
 
     static get dbPromise() {
-        console.log('dbPromise');
+        //console.log('dbPromise');
         return DBHelper.openDatabase();
     }
 
@@ -44,7 +44,7 @@ class DBHelper {
 
     static getVal(key){
         return DBHelper.dbPromise.then(db => {
-           console.log('getVal', key, typeof key);
+           //console.log('getVal', key, typeof key);
            return db.transaction('keyval').objectStore('keyval').get(key);
            
         });
@@ -91,44 +91,19 @@ class DBHelper {
 
 
     /**
-     * Fetch all restaurants.
-     */
-    /*
-    static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
-    }
-    */
-
-    /**
     * Fetch all restaurants using fetch.
     */
     static fetchRestaurants(callback) {
-        //console.log(DBHelper.dbPromise);
-        //console.log(DBHelper.setVal({ id: 1, name: "one" }));
-        //console.log(DBHelper.setVal({ id: 2, name: "two" }));
-        //console.log(DBHelper.setVal({ id: 3, name: "three" }));
-
+        
         //console.log(DBHelper.getKeys());
         let keys = DBHelper.getKeys();
-        console.log("keys: ", keys);
+        //console.log("keys: ", keys);
         
         let vals = keys.then(keys => keys.map(key => DBHelper.getVal(key)));
-        console.log("vals: ", vals);
+        //console.log("vals: ", vals);
         vals.then(vals => {
             if (vals.length > 0) {//restaurant data is in idb
-                console.log('fetchRestaurants returning from idb ', vals);
+                //console.log('fetchRestaurants returning from idb ', vals);
                 
                 Promise.all(vals).then(vals => {
                     callback(null, vals);//use data in callback
@@ -144,7 +119,7 @@ class DBHelper {
             .then(json => {
                 //console.log("fetchRestaurants .then json: ", json);
                 for (let restaurant of json) {
-                    console.log(`putting ${restaurant.name} in idb: `, restaurant);
+                    //console.log(`putting ${restaurant.name} in idb: `, restaurant);
                     DBHelper.setVal(restaurant);
                 }
                 callback(null, json);
@@ -154,7 +129,7 @@ class DBHelper {
         
     }
 
-    /**
+   /**
     * Fetch all restaurants using fetch, without using a callback
     */
     static FetchRestaurants() {
@@ -177,45 +152,27 @@ class DBHelper {
         
         DBHelper.getVal(parseInt(id)).then(restaurant => {//check idb for restaurant
 
-            console.log('fetchRestaurantById',restaurant);
+            //console.log('fetchRestaurantById',restaurant);
         
             if (restaurant) {//if restaurant in idb, use it
-                console.log('fetchRestaurantById found in idb');
+                //console.log('fetchRestaurantById found in idb');
                 return Promise.resolve(restaurant).then(callback(null, restaurant));
             }
 
-            console.log('fetchRestaurantById fetching from API');
+            //console.log('fetchRestaurantById fetching from API');
             return fetch(DBHelper.API_URL + `/${id}`)//restaurant not in idb, fetch from idb
             .then(response => {
 
                 return response.json();
             }).
             then(json => {//store restaurant in idb
-                console.log('fetchRestaurantById adding restaurant to idb', json);
+                //console.log('fetchRestaurantById adding restaurant to idb', json);
                 DBHelper.setVal(json);
                 callback(null, json);
             })
             .catch(err => { console.log(err); callback(err, null); });
         }).catch(err => { console.log(err); callback(err, null); });
     }
-
-    /*
-    static fetchRestaurantById(id, callback) {
-    // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) { // Got the restaurant
-          callback(null, restaurant);
-        } else { // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
-        }
-      }
-    });
-    }
-    */
 
     /**
      * Fetch restaurants by a cuisine type with proper error handling.

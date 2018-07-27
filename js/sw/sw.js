@@ -31,10 +31,10 @@ self.addEventListener('install', event => {
                 //console.log('cache imgs, restaurants: ', restaurants);
                 let imgCacheStr = restaurants.map(restaurant => {
                     let imgUrls = DBHelper.imgUrlsArrayForRestaurants(restaurant);
-                    console.log(`cache imgs, ${restaurant}: ${imgUrls}`);
+                    //console.log(`cache imgs, ${restaurant}: ${imgUrls}`);
                     return imgUrls;
                 }).reduce((a, b) => a.concat(b));
-                console.log(imgCacheStr);
+                //console.log(imgCacheStr);
                 return cache.addAll(imgCacheStr);
             });
         })).catch(err => console.log(err)));});
@@ -64,7 +64,7 @@ self.addEventListener('fetch', event => {
     //console.log("request origin", requestUrl.origin);
     if (requestUrl.origin === location.origin) {
         if (requestUrl.pathname.startsWith('/img/')) {
-            console.log("img");
+            //console.log("img");
             event.respondWith(serveImg(event.request));
             return;
         }
@@ -78,18 +78,18 @@ self.addEventListener('fetch', event => {
 
 const serveImg = request => {
 
-    console.log("serveImg");
+    //console.log("serveImg");
     //let storageUrl = request.url.replace(/-\d+px\.jpg$/, '');
     let storageUrl = request.url;
     return caches.open(imgCache).then(cache => {
         return cache.match(storageUrl).then(response => {
             if (response) {
-                console.log("img matched in cache ", response);
+                //console.log("img matched in cache ", response);
                 return response;
             }
             return fetch(request).then(netResponse => {
                 cache.put(storageUrl, netResponse.clone());
-                console.log("getting img from net", request);
+                //console.log("getting img from net", request);
                 return netResponse;
             });
         });
