@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="245.53046"
+   height="293.87955"
+   id="svg2706"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="choochus_wolfhead_howl_02.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   version="1.0">
+  <defs
+     id="defs2708">
+    <linearGradient
+       id="linearGradient3549">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop3551" />
+      <stop
+         id="stop3561"
+         offset="1"
+         style="stop-color:#5b5b5b;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3549"
+       id="linearGradient4360"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(839.77039,-88.528633)"
+       x1="-460.42053"
+       y1="322.41324"
+       x2="-451.20007"
+       y2="985.13147" />
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective2714" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="106.68879"
+     inkscape:cy="143.78639"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="640"
+     inkscape:window-height="675"
+     inkscape:window-x="1583"
+     inkscape:window-y="378"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <metadata
+     id="metadata2711">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:description>The head of a wolf howling</dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>animal</rdf:li>
+            <rdf:li>wolf</rdf:li>
+            <rdf:li>silhouette</rdf:li>
+            <rdf:li>howl</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title></dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Choochus</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:date>12/23/2008</dc:date>
+        <dc:title>Wolf Head Howl 2</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-269.73627,-382.05406)">
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;display:inline"
+       d="M 476.35681,382.07251 C 472.99351,382.37338 467.45308,386.12372 463.35681,391.04126 C 461.50936,393.25914 458.86873,396.22949 457.48181,397.63501 C 456.0949,399.04053 451.27921,404.48594 446.79431,409.72876 C 433.2512,425.5606 432.6242,425.97241 415.60681,431.51001 C 411.28531,432.91625 406.44795,434.91141 404.82556,435.94751 C 401.62705,437.99012 393.54555,445.99682 391.91931,448.72876 C 385.89726,458.84528 379.29996,468.69714 377.32556,470.51001 C 375.98463,471.74123 374.31694,474.17981 373.63806,475.94751 C 372.84089,478.02323 370.36252,480.86122 366.60681,483.94751 C 363.40841,486.57584 359.72248,489.97988 358.41931,491.51001 C 357.08379,493.07813 348.97073,498.79435 339.85681,504.60376 C 330.96368,510.27241 323.25472,515.51088 322.70056,516.26001 C 320.38111,519.39546 328.69062,525.56023 338.70056,528.10376 C 340.66878,528.60389 342.39572,529.6255 342.54431,530.38501 C 342.69292,531.14452 340.80435,534.34248 338.32556,537.47876 C 333.30406,543.83222 331.29274,550.52248 333.57556,553.29126 C 335.37322,555.47158 332.57893,559.98631 326.95056,564.01001 C 321.52776,567.88674 316.87937,573.0036 314.70056,577.44751 C 313.72104,579.44534 312.3306,581.45249 311.60681,581.91626 C 310.88306,582.38005 309.90516,584.6241 309.45056,586.91626 C 308.99595,589.20841 307.86842,592.63679 306.95056,594.54126 C 304.86609,598.86637 299.10738,606.47312 296.79431,607.94751 C 295.83698,608.55771 294.91286,609.60326 294.73181,610.29126 C 294.55075,610.97936 272.06774,630.78196 270.11127,633.34037 L 269.73627,675.93361 L 441.82556,675.93361 L 442.60681,672.76001 C 447.93274,668.54766 453.67183,663.82066 454.82556,661.38501 C 456.98556,656.81501 471.0343,651.21502 470.54431,646.38501 C 469.77389,646.38501 469.52409,646.38501 468.76306,646.38501 C 468.90261,646.2522 469.02771,646.14637 469.16931,646.01001 C 467.76865,643.81271 458.98696,613.33875 459.54431,607.41626 C 459.77574,604.95716 459.5954,601.49421 459.13806,599.69751 C 457.8075,594.47016 458.40543,587.80644 460.57556,583.72876 C 462.0718,580.9173 462.29721,578.95566 461.41931,576.07251 C 460.72125,573.78005 460.75922,571.53201 461.51306,570.57251 C 462.65696,569.11657 474.54959,564.64325 477.38806,564.60376 C 478.01431,564.59505 478.00603,563.79202 477.38806,562.82251 C 476.77007,561.853 476.70628,560.50166 477.23181,559.79126 C 477.75733,559.08085 477.76937,557.83557 477.26306,557.04126 C 476.75674,556.24693 476.67692,554.26289 477.10681,552.63501 C 477.53669,551.00713 478.36526,545.84707 478.95056,541.16626 C 479.53586,536.48544 480.43719,532.39975 480.95056,532.07251 C 481.96406,531.42648 484.15409,518.73252 484.16931,513.38501 C 484.17449,511.5665 484.96459,509.24027 485.95056,508.19751 C 487.08317,506.99966 487.5215,505.00242 487.13806,502.79126 C 486.2761,497.82062 489.11371,488.10582 492.51306,484.38501 C 494.13439,482.61037 496.1935,478.44203 497.23181,474.79126 C 498.24178,471.24011 499.21244,468.24694 499.38806,468.13501 C 499.56367,468.02306 502.15574,465.62101 505.13806,462.79126 C 514.98983,453.44353 516.38646,449.89484 514.60681,439.04126 C 514.16281,436.33341 513.40348,434.12784 512.88806,434.13501 C 512.37261,434.14218 510.105,434.93636 507.85681,435.91626 C 505.60859,436.89617 502.00566,437.86234 499.85681,438.07251 C 497.70798,438.2827 494.36389,439.11854 492.41931,439.91626 C 490.47472,440.71398 488.48045,441.17315 488.01306,440.94751 C 486.27977,440.11079 486.09133,434.89956 487.48181,426.63501 C 489.47997,414.75844 489.68216,409.38997 488.32556,405.07251 C 487.68159,403.02307 486.87988,399.24225 486.51306,396.66626 C 485.66542,390.71351 481.00642,383.08175 477.66931,382.16626 C 477.28932,382.06201 476.83728,382.02953 476.35681,382.07251 z"
+       id="path4349"
+       sodipodi:nodetypes="csssssssssssssssssssssssccccccccsssssssssssssssssssssssssssssc" />
+  </g>
+</svg>

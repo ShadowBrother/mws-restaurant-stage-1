@@ -66,7 +66,7 @@ gulp.task('concat:restaurant', function(){
 gulp.task('concat:js', ['concat:main', 'concat:restaurant']);
 
 gulp.task('copy', function(){
-   return gulp.src(['js/sw/sw.js','js/dbhelper.js','*.{html,md}'])
+   return gulp.src(['js/sw/sw.js','js/dbhelper.js','*.{html,md,webmanifest}'])
     .pipe(gulp.dest('build'));   
 });
 
@@ -78,6 +78,11 @@ gulp.task('copy:idb', function(){
 gulp.task('copy:img', function(){
     return gulp.src(['img/**/*'])
     .pipe(gulp.dest('build/img'));
+});
+
+gulp.task('copy:img-fixed', function(){
+    return gulp.src(['img/fixed/*'])
+    .pipe(gulp.dest('build/img/fixed'));
 });
 
 gulp.task('responsiveImages', function(){
