@@ -79,7 +79,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  DBHelper.fetchReviewsByRestaurantId(restaurant.id, fillReviewsHTML);
 }
 
 /**
@@ -105,11 +105,20 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (error, reviews) => {
+    
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
+
+  if (error){
+      console.log(error);
+      const noReviews = document.createElement('p');
+      noReviews.innerHTML = 'Could not fetch reviews and there are no reviews in the cache!';
+      container.appendChild(noReviews);
+      return;
+  }
 
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -134,7 +143,11 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  //console.log('reviewDate raw: ', review, review.updatedAt);
+  let reviewDate = new Date(review.updatedAt);
+  //console.log('reviewDate: ', reviewDate);
+  date.innerHTML = reviewDate.toLocaleDateString("en-US", {month: 'long', day: 'numeric', year: 'numeric'});
+
   li.appendChild(date);
 
   const rating = document.createElement('p');

@@ -19,11 +19,11 @@ class DBHelper {
     }
 
     static get RESTAURANT_URL(){
-        return API_URL + '/restaurants';
+        return DBHelper.API_URL + '/restaurants';
     }
 
     static get REVIEW_URL() {
-        return API_URL + '/reviews';
+        return DBHelper.API_URL + '/reviews';
     }
 
     static openDatabase() {
@@ -37,18 +37,18 @@ class DBHelper {
             switch(upgradeDB.oldVersion){
                 case 0:
         
-                    var restaurantStore = upgradeDB.createObjectStore('restaurants', {
+                    let restaurantStore = upgradeDB.createObjectStore('restaurants', {
             keyPath: 'id'});
 
-                    //console.log('keyval: ', store);
-                    restaraurantStore.createIndex('by-id', 'id');
+                    console.log('restaurantStore: ', restaurantStore);
+                    restaurantStore.createIndex('by-id', 'id');
                 case 1:
 
-                    var reviewStore = upgradeDB.createObjectStore('reviews', {
+                    let reviewStore = upgradeDB.createObjectStore('reviews', {
             keyPath: 'id'});
-
+                    console.log('reviewStore: ', reviewStore);
                     reviewStore.createIndex('by-id', 'id');
-
+                    reviewStore.createIndex('by-restaurant-id', 'restaurant_id');
             }
         });
     }
@@ -78,7 +78,7 @@ class DBHelper {
     }
 
     static deleteVal(store, key) {
-        return dbPromise.then(db => {
+        return DBHelper.dbPromise.then(db => {
             const tx = db.transaction(store, 'readwrite');
             tx.objectStore(store).delete(key);
             return tx.complete;
@@ -86,18 +86,20 @@ class DBHelper {
     }
 
     static clearStore(store) {
-        return dbPromise.then(db => {
+        return DBHelper.dbPromise.then(db => {
             const tx = db.transaction(store, 'readwrite');
             tx.objectStore(store).clear();
             return tx.complete;
         });
     }
 
-    static getKeys(store){
+    static getKeys(storeName) {
+        
         return DBHelper.dbPromise.then(db => {
-            const tx = db.transaction(store);
+            
+            const tx = db.transaction(storeName);
             const keys = [];
-            const store = tx.objectStore(store);
+            const store = tx.objectStore(storeName);
 
             (store.iterateKeyCursor || store.iterateCursor).call(store, cursor => {
                 if(!cursor) return;
@@ -114,9 +116,9 @@ class DBHelper {
     */
     static fetchRestaurants(callback) {
         
-        //console.log(DBHelper.getKeys());
+       
         let keys = DBHelper.getKeys('restaurants');
-        //console.log("keys: ", keys);
+        console.log("keys: ", keys);
         
         let vals = keys.then(keys => keys.map(key => DBHelper.getVal('restaurants', key)));
         //console.log("vals: ", vals);
@@ -137,11 +139,12 @@ class DBHelper {
             })
             .then(json => {
                 //console.log("fetchRestaurants .then json: ", json);
+                callback(null, json);
                 for (let restaurant of json) {
                     //console.log(`putting ${restaurant.name} in idb: `, restaurant);
                     DBHelper.setVal('restaurants', restaurant);
                 }
-                callback(null, json);
+                
             })
             .catch(err => callback(err, null));
         });
@@ -179,19 +182,79 @@ class DBHelper {
             }
 
             //console.log('fetchRestaurantById fetching from API');
-            return fetch(DBHelper.RESTAURANT_URL + `/${id}`)//restaurant not in idb, fetch from idb
+            return fetch(DBHelper.RESTAURANT_URL + `/${id}`)//restaurant not in idb, fetch from api
             .then(response => {
 
                 return response.json();
-            }).
-            then(json => {//store restaurant in idb
+            })
+            .then(json => {//store restaurant in idb
                 //console.log('fetchRestaurantById adding restaurant to idb', json);
                 DBHelper.setVal('restaurants', json);
                 callback(null, json);
             })
             .catch(err => { console.log(err); callback(err, null); });
-            }).catch(err => { console.log(err); callback(err, null); });
+        }).catch(err => { console.log(err); callback(err, null); });
+     }
+
+    /**
+     * Fetch a review by its ID.
+     */
+
+    static fetchReviewById(id, callback) {
+
+        DBHelper.getVal('review', parseInt(id)).then(review => {//check idb for review
+
+            if (review) {//if review is in idb, use it
+                return Promise.resolve(review).then(callback(null, restaurant));
             }
+
+            return fetch(DBHelper.REVIEW_URL + `/${id}`)//review not in idb, fetch from api
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {//store review in idb
+                DBHelper.setVal('review', json);
+                callback(null, json);
+            })
+            .catch(err => { console.log(err); callback(err, null); });
+        }).catch(err => { console.log(err); callback(err, null); });
+    }
+
+    /**
+     * Fetch reviews by restaurant id
+     */
+
+    static fetchReviewsByRestaurantId(id, callback) {
+
+        DBHelper.dbPromise.then(db => {
+            let store = db.transaction('reviews', 'readonly').objectStore('reviews');
+            let index = store.index('by-restaurant-id', { unique: false });
+            return index.getAll(id);
+        })
+        .then(reviews => {
+            console.log('fetchReviewsByRestaurantId idb reviews: ', reviews);
+            return Promise.all(reviews)
+        })
+        .then(reviews => {
+            console.log('fetchReviewsByRestaurantId reviews: ', reviews);
+            
+           if (reviews.length > 0) {//reviews in idb, return
+                callback(null, reviews);
+                return;
+            }
+            return fetch(DBHelper.REVIEW_URL + `/?restaurant_id=${id}`)//fetch reviews from api
+            .then(response => response.json())
+            .then(json => {
+                console.log('fetchReviewsByRestaurantId fetched reviews: ', json);
+                callback(null, json);//callback with reviews
+                for (let review of json) {//put reviews in idb
+                
+                    DBHelper.setVal('reviews', review);
+                }
+            }).catch(err => { console.log(err); callback(err, null); });
+        }).catch(err => { console.log(err); callback(err, null); });
+        
+    }
 
     /**
      * Fetch restaurants by a cuisine type with proper error handling.
