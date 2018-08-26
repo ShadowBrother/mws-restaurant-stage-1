@@ -296,6 +296,23 @@ nav h1 a {
   color: #666;
 }
 
+/*========Heart icon for favoriting restaurants=========*/
+
+.heart {
+    fill:none;
+    stroke: black;
+    stroke-width: 2px;
+    width: 25px;
+    height: 20px;
+    padding-left: 5px;
+}
+.heart.favorite {
+    fill: red;
+}
+.heart:hover{
+    fill:pink;
+}
+
 /*========== Media Queries ==========*/
 
 @media screen and (max-width: 1160px){

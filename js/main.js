@@ -161,7 +161,12 @@ createRestaurantHTML = (restaurant) => {
 
   const name = document.createElement('h2');
   name.innerHTML = restaurant.name;
+  
+  const heart = createHeart(restaurant.id, restaurant.is_favorite);
+  
+  name.append(heart);
   li.append(name);
+
 
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;

@@ -43,13 +43,13 @@ gulp.task('clean', function(){
 
 
 gulp.task('concat:main', function(){
-    return gulp.src(['js/dbhelper.js','js/main.js'])
+    return gulp.src(['js/dbhelper.js','js/favorite.js', 'js/main.js'])
         .pipe(concat('main.js'))
         .pipe(gulp.dest('build/js/'));
 });
 
 gulp.task('concat:restaurant', function(){
-    return gulp.src(['js/dbhelper.js','js/restaurant_info.js'])
+    return gulp.src(['js/dbhelper.js','js/favorite.js','js/restaurant_info.js'])
         .pipe(concat('restaurant_info.js'))
             .pipe(gulp.dest('build/js/'));
 });
