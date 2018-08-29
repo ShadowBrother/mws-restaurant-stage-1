@@ -110,6 +110,16 @@ class DBHelper {
         });
     }
 
+    /**
+     * Set restaurant favorite status
+     */
+
+    static setFavorite(id, isFavorite) {
+
+        fetch(`${DBHelper.RESTAURANT_URL}/${id}/?is_favorite=${isFavorite}`, { method: 'PUT' })
+        .catch(err => console.log(err));
+    }
+
 
     /**
     * Fetch all restaurants using fetch.

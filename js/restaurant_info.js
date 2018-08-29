@@ -61,6 +61,7 @@ fetchRestaurantFromURL = (callback) => {
 fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
+  console.log('fillRestaurantHTML is_favorite: ', restaurant.is_favorite);
   name.append(createHeart(restaurant.id, restaurant.is_favorite));
 
   const address = document.getElementById('restaurant-address');

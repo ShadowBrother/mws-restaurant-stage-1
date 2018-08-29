@@ -7,11 +7,15 @@ toggleFavorite = function (e) {
     }
         
     if(heart.classList.contains('favorite')){
-        heart.classList.remove('favorite');        
+        heart.classList.remove('favorite');
+        DBHelper.setFavorite(parseInt(heart.parentElement.getAttribute("id")), false);
+        
     }
     else {        
-        heart.classList.add('favorite');        
+        heart.classList.add('favorite');   
+        DBHelper.setFavorite(parseInt(heart.parentElement.getAttribute("id")), true);
     }
+
    
 };
 
@@ -24,8 +28,8 @@ createHeart = function (id, favorite = false) {
 </svg>`;
     heart.setAttribute('id', `${id}`);
     
-    if(favorite) {
-        heart.classList.add('favorite');
+    if(favorite == 'true') {
+        heart.firstChild.classList.add('favorite');
     }
     
     heart.onclick = toggleFavorite;
