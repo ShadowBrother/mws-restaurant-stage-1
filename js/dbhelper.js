@@ -116,7 +116,14 @@ class DBHelper {
 
     static setFavorite(id, isFavorite) {
 
-        fetch(`${DBHelper.RESTAURANT_URL}/${id}/?is_favorite=${isFavorite}`, { method: 'PUT' })
+        fetch(`${DBHelper.RESTAURANT_URL}/${id}/?is_favorite=${isFavorite}`, { method: 'PUT' })//update is_favorite for restaurant
+        .catch(err => console.log(err));
+        
+        DBHelper.getVal('restaurants', id).then(val => {//update idb
+            val.is_favorite = isFavorite;
+            DBHelper.setVal('restaurants', val)
+            .catch(err => console.log(err));
+        })
         .catch(err => console.log(err));
     }
 

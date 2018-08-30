@@ -28,7 +28,7 @@ createHeart = function (id, favorite = false) {
 </svg>`;
     heart.setAttribute('id', `${id}`);
     
-    if(favorite == 'true') {
+    if(favorite == true || favorite == 'true') {
         heart.firstChild.classList.add('favorite');
     }
     
