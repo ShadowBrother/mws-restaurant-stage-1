@@ -296,6 +296,32 @@ nav h1 a {
   color: #666;
 }
 
+.review-button {//use same styling as View Detail links from restaurant-list
+
+  background-color: orange;
+  border-bottom: 3px solid #eee;
+  color: #fff;
+  display: inline-block;
+  font-size: 13pt;
+  margin: 15px 0 0;
+  padding: 8px 30px 10px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+#new-review-form p {
+    
+    margin: 20px 0;
+    clear: both;
+
+}
+
+.new-review-input, .new-review-label{
+    margin: 10px 10px;
+    float: left;
+}
+
 /*========Heart icon for favoriting restaurants=========*/
 
 .heart {
