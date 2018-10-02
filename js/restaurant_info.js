@@ -140,7 +140,7 @@ fillReviewsHTML = (error, reviews) => {
     button.classList.add("review-button");
     button.innerHTML = "Add New Review";
     button.onclick = () =>{
-        let form = createNewReviewForm();
+        let form = createNewReviewForm(reviews[0].restaurant_id);
         let reviewList = document.getElementById('reviews-list');
         reviewList.appendChild(form);
     };
@@ -179,13 +179,40 @@ createReviewHTML = (review) => {
 };
 
 /**
+ * Post review form
+ */
+postReview = e => {
+    console.log('postReview');
+    e.preventDefault();
+
+    console.log('postReview e:', e);
+    
+    const FD = new FormData(e.srcElement);
+   
+    console.log('FD:');
+    for([key, val] of FD){
+        console.log('key,val: ',key, val);
+    }
+
+    DBHelper.postReview(FD);
+};
+
+/**
  * Create review form and add it to the webpage.
  */
-createNewReviewForm = () => {
+createNewReviewForm = (id) => {
     const li = document.createElement('li');
     const form = document.createElement('form');
     form.id = "new-review-form";
-    
+    form.onsubmit = postReview;
+
+    const restaurant_id = document.createElement('input');
+    restaurant_id.type = "text";
+    restaurant_id.name = "restaurant_id";
+    restaurant_id.value = id;
+    restaurant_id.hidden = true;
+    form.appendChild(restaurant_id);
+
     const name = document.createElement('input');
     name.classList.add("new-review-input");
     name.setAttribute("type", "text");
@@ -222,11 +249,11 @@ createNewReviewForm = () => {
     p.appendChild(rating);
     form.appendChild(p);
 
-    const comments = document.createElement('input');
+    const comments = document.createElement('textarea');
     comments.classList.add("new-review-input");
     comments.id = "new-review-comments";
-    comments.setAttribute("type", "text");
-    comments.setAttribute("name", "comment");
+    //comments.setAttribute("type", "text");
+    comments.setAttribute("name", "comments");
     comments.setAttribute("height", "50px");
     
 

@@ -127,6 +127,17 @@ class DBHelper {
         .catch(err => console.log(err));
     }
 
+    /**
+     * Post  new restaurant review
+     */
+
+    static postReview(data) {
+
+        fetch(DBHelper.REVIEW_URL, {
+            method: 'POST',
+            body: data
+        }).catch(err => console.log(err));
+    }
 
     /**
     * Fetch all restaurants using fetch.
