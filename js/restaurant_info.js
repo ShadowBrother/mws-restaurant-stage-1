@@ -110,43 +110,60 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 fillReviewsHTML = (error, reviews) => {
     
     const container = document.getElementById('reviews-container');
-    const title = document.createElement('h2');
-    title.innerHTML = 'Reviews';
-    container.appendChild(title);
-
+    let title = document.getElementById('review-header');
+    if(!title){//if updating page, don't add second header
+        title = document.createElement('h2');
+        title.innerHTML = 'Reviews';
+        title.id = 'review-header';
+        container.appendChild(title);
+    }
     if (error){
         console.log(error);
-        const noReviews = document.createElement('p');
-        noReviews.innerHTML = 'Could not fetch reviews and there are no reviews in the cache!';
-        container.appendChild(noReviews);
+        let reviewlist = document.getElementById('reviews-list');
+        //console.log(reviewlist);
+        if(reviewlist.childElementCount == 0){//if there's data already displayed, don't display error
+            const noReviews = document.createElement('p');
+            noReviews.innerHTML = 'Could not fetch reviews and there are no reviews in the cache!';
+            container.appendChild(noReviews);
+        }
         return;
     }
 
     if (!reviews) {
-        const noReviews = document.createElement('p');
-        noReviews.innerHTML = 'No reviews yet!';
-        container.appendChild(noReviews);
+        let reviewlist = document.getElementById('reviews-list');
+       console.log("no reviews");
+        if(reviewlist.childElementCount == 0){//if there's data already displayed, don't display error
+            const noReviews = document.createElement('p');
+            noReviews.innerHTML = 'No reviews yet!';
+            container.appendChild(noReviews);
+        }
         return;
     }
     const ul = document.getElementById('reviews-list');
+    //console.log(ul.length,ul.childElementCount)
     reviews.forEach(review => {
         ul.appendChild(createReviewHTML(review));
     });
     container.appendChild(ul);
+    //console.log(ul.length, ul.childElementCount);
 
-    
-    const button = document.createElement('button');//create button that creates form for adding new reviews
-    button.setAttribute("name", "createFormBtn");
-    button.classList.add("review-button");
-    button.innerHTML = "Add New Review";
-    button.onclick = () =>{
-        let form = createNewReviewForm(reviews[0].restaurant_id);
-        let reviewList = document.getElementById('reviews-list');
-        reviewList.appendChild(form);
-    };
-    
-    container.appendChild(button);
- 
+    let button = document.getElementById("new-review-button");
+    if(!button){//if updating page, don't add second button
+        console.log('not an update, create button');
+        button = document.createElement('button');//create button that creates form for adding new reviews
+        button.setAttribute("name", "createFormBtn");
+        button.id = "new-review-button";
+        button.classList.add("review-button");
+        button.innerHTML = "Add New Review";
+        button.onclick = () =>{
+            let form = createNewReviewForm(reviews[0].restaurant_id);
+            let reviewList = document.getElementById('reviews-list');
+            reviewList.appendChild(form);
+        };
+        
+    }
+           
+    container.appendChild(button);//append button to end of reviews
  
 };
 

@@ -267,7 +267,7 @@ class DBHelper {
         .then(reviews => {
             console.log('fetchReviewsByRestaurantId reviews: ', reviews);
             
-           if (reviews.length > 0) {//reviews in idb, return
+           if (reviews.length > 0) {//reviews in idb, callback with reviews
                 callback(null, reviews);
                 
             }
@@ -279,7 +279,7 @@ class DBHelper {
                 if (!DBHelper.compareReviews(reviews, json)) {//fetched data contains data that wasn't in idb
                     console.log('new data fetched');
                     let changes = DBHelper.getUpdatedReviews(reviews,json);
-                    callback(null, changes);//callback with reviews
+                    callback(null, changes);//callback with new reviews
                     for (let review of changes) {//put reviews in idb
                         review.restaurant_id = parseInt(review.restaurant_id);//convert restaurant_id to number
                         DBHelper.setVal('reviews', review);
