@@ -191,7 +191,7 @@ postReview = e => {
    
     console.log('FD:');
     for([key, val] of FD){
-        console.log('key,val: ',key, val);
+        console.log('key,val, typeof: ',key, val, typeof(val));
     }
 
     DBHelper.postReview(FD);
@@ -207,9 +207,10 @@ createNewReviewForm = (id) => {
     form.onsubmit = postReview;
 
     const restaurant_id = document.createElement('input');
-    restaurant_id.type = "text";
+    restaurant_id.type = "number";
     restaurant_id.name = "restaurant_id";
     restaurant_id.value = id;
+    console.log('typeof id', typeof(id));
     restaurant_id.hidden = true;
     form.appendChild(restaurant_id);
 

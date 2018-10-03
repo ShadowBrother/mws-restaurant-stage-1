@@ -241,6 +241,7 @@ class DBHelper {
                 return response.json();
             })
             .then(json => {//store review in idb
+                json.restaurant_id = parseInt(json.restaurant_id);//convert restaurant_id to number
                 DBHelper.setVal('review', json);
                 callback(null, json);
             })
@@ -268,20 +269,72 @@ class DBHelper {
             
            if (reviews.length > 0) {//reviews in idb, return
                 callback(null, reviews);
-                return;
+                
             }
             return fetch(DBHelper.REVIEW_URL + `/?restaurant_id=${id}`)//fetch reviews from api
             .then(response => response.json())
             .then(json => {
                 console.log('fetchReviewsByRestaurantId fetched reviews: ', json);
-                callback(null, json);//callback with reviews
-                for (let review of json) {//put reviews in idb
-                
-                    DBHelper.setVal('reviews', review);
+                console.log('reviews from idb', reviews);
+                if (!DBHelper.compareReviews(reviews, json)) {//fetched data contains data that wasn't in idb
+                    console.log('new data fetched');
+                    let changes = DBHelper.getUpdatedReviews(reviews,json);
+                    callback(null, changes);//callback with reviews
+                    for (let review of changes) {//put reviews in idb
+                        review.restaurant_id = parseInt(review.restaurant_id);//convert restaurant_id to number
+                        DBHelper.setVal('reviews', review);
+                    }
                 }
             }).catch(err => { console.log(err); callback(err, null); });
         }).catch(err => { console.log(err); callback(err, null); });
         
+    }
+
+    /**
+     * Compare review data from idb and fetch, returns true if data is same, else false
+     */
+
+    static compareReviews(idb, fetch) {
+
+        console.log("compareReviews",idb, fetch);
+        if (idb.length !== fetch.length) {
+            console.log('different lengths, not the same');
+            return false;
+        }
+
+        for (let fetch_review of fetch) {
+            let idb_review = idb.find(x => x.id === fetch_review.id);
+            console.log('fetch_review.id idb_review', fetch_review.id, idb_review);
+            if (idb_review) {//idb has a review with matching id
+                console.log("fetch update, idb update", Date(fetch_review.updatedAt), Date(idb_review.updatedAt), (Date(fetch_review.updatedAt) == Date(idb_review.updatedAt)) ? "true" : "false");
+                if (Date(fetch_review.updatedAt) !== Date(idb_review.updatedAt)) return false;//different update dates
+            }
+            else return false;//missmatched data
+        }
+        return true;
+    }
+
+    /**
+    * Find updated reviews, returns array of new or updated reviews
+    */
+    static getUpdatedReviews(idb, fetch) {
+        console.log("getUpdatedReviews",idb, fetch);
+
+        let changes = [];
+
+        for (let fetch_review of fetch) {
+            let idb_review = idb.find(x => x.id === fetch_review.id);
+            console.log('fetch_review.id idb_review', fetch_review.id, idb_review);
+            if (idb_review) {//idb has a review with matching id
+                console.log("fetch update, idb update", Date(fetch_review.updatedAt), Date(idb_review.updatedAt), (Date(fetch_review.updatedAt) == Date(idb_review.updatedAt)) ? "true" : "false");
+                if (Date(fetch_review.updatedAt) !== Date(idb_review.updatedAt)) changes.push(fetch_review);//updated data, add review to changes
+            }
+            else {
+                changes.push(fetch_review);//missing data, add review to changes
+            }
+        
+        }
+        return changes;
     }
 
     /**
