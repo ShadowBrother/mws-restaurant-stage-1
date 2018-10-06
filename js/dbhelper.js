@@ -33,7 +33,7 @@ class DBHelper {
             return Promise.resolve();
         }
         //console.log('openDatabase');
-        return idb.open('restaurant-db', 2, function (upgradeDB) {
+        return idb.open('restaurant-db', 3, function (upgradeDB) {
             switch(upgradeDB.oldVersion){
                 case 0:
         
@@ -49,6 +49,11 @@ class DBHelper {
                     console.log('reviewStore: ', reviewStore);
                     reviewStore.createIndex('by-id', 'id');
                     reviewStore.createIndex('by-restaurant-id', 'restaurant_id');
+                case 2:
+                    let newReviewStore = upgradeDB.createObjectStore('newReviews', {
+                        keyPath: 'id'
+                    });
+                    console.log('newReviewStore: ', newReviewStore);
             }
         });
     }
@@ -135,7 +140,10 @@ class DBHelper {
         fetch(DBHelper.REVIEW_URL, {
             method: 'POST',
             body: data
-        }).catch(err => console.log(err));
+        }).catch(err => {
+            console.log(err);
+            //no connection, store form data in idb until back online
+        });
     }
 
     /**
