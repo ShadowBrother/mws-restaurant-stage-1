@@ -156,9 +156,18 @@ fillReviewsHTML = (error, reviews) => {
         button.classList.add("review-button");
         button.innerHTML = "Add New Review";
         button.onclick = () =>{
-            let form = createNewReviewForm(reviews[0].restaurant_id);
+            let form = document.getElementById('new-review-form');
+            if(form ){//if form has previously been created, update restaurant_id, display it
+                form.querySelector('#restaurant_id').value = reviews[0].restaurant_id;
+                form.querySelector('#new-review-name').value = form.querySelector('#new-review-rating').value = form.querySelector('#new-review-comments').value = "";//reset values
+                form = form.parentNode; //set form equal to it's parent li
+                form.style.display = 'block';
+            }
+            else{//if form hasn't been created yet, create it
+                form = createNewReviewForm(reviews[0].restaurant_id);
+            }
             let reviewList = document.getElementById('reviews-list');
-            reviewList.appendChild(form);
+            reviewList.appendChild(form);//append form to end of reviewList
         };
         
     }
@@ -205,19 +214,27 @@ postReview = e => {
     console.log('postReview e:', e);
     
     const FD = new FormData(e.srcElement);
-   
+    let review = {};
     console.log('FD:');
     for([key, val] of FD){
         console.log('key,val, typeof: ',key, val, typeof(val));
+        review[key] = val ;
     }
-
+    review['updatedAt'] = new Date();
+    //post review
     DBHelper.postReview(FD);
+    //display new review
+    fillReviewsHTML(null, [review]);
+    e.srcElement.parentNode.style.display = 'none';//hide form parent li, so it can be reused later if necessary
+
 };
 
 /**
  * Create review form and add it to the webpage.
  */
 createNewReviewForm = (id) => {
+
+    
     const li = document.createElement('li');
     const form = document.createElement('form');
     form.id = "new-review-form";
@@ -225,7 +242,7 @@ createNewReviewForm = (id) => {
 
     const restaurant_id = document.createElement('input');
     restaurant_id.type = "number";
-    restaurant_id.name = "restaurant_id";
+    restaurant_id.name = restaurant_id.id = "restaurant_id";
     restaurant_id.value = id;
     console.log('typeof id', typeof(id));
     restaurant_id.hidden = true;

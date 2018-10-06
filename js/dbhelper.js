@@ -123,8 +123,7 @@ class DBHelper {
             val.is_favorite = isFavorite;
             DBHelper.setVal('restaurants', val)
             .catch(err => console.log(err));
-        })
-        .catch(err => console.log(err));
+        }).catch(err => console.log(err));
     }
 
     /**
