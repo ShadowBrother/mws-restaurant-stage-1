@@ -10,6 +10,41 @@ if('serviceWorker' in navigator){
     .catch(error => console.log('Service worker registration failed, : ', error));
 }
 
+/**
+ * add online event listener to sync failed review posts/favorite changes
+ **/
+
+window.addEventListener('online', () => {
+    
+    console.log('online event');
+    //reattempt to post new reviews
+    DBHelper.dbPromise.then(db => {
+        let store = db.transaction('requests', 'readonly').objectStore('requests');
+        let index = store.index('by-type', { unique: false });
+        return index.getAll('newReview');
+    }).then(requests => Promise.all(requests))
+        .then(requests => {
+            for(let request of requests){
+                console.log('repost review request: ', request);
+                DBHelper.postReview(request.data);//reattempt to post review
+                DBHelper.deleteVal('requests', request.id);//remove request from requests idb
+            }
+        }).catch(err => console.log(err));
+
+    //reattempt to put favorite status
+    DBHelper.dbPromise.then(db => {
+        let store = db.transaction('requests', 'readonly').objectStore('requests');
+        let index = store.index('by-type', { unique: false });
+        return index.getAll('favorite');
+    }).then(requests => Promise.all(requests))
+        .then(requests => {
+            for(let request of requests){
+                console.log('reput favorite request: ', request);
+                DBHelper.setFavorite(request.restaurant_id, request.is_favorite);//reattempt to post review
+                DBHelper.deleteVal('requests',request.id);//remove request from requests idb
+            }
+        }).catch(err => console.log(err));
+});
 
 /**
  * Initialize Google map, called from HTML.
@@ -215,15 +250,17 @@ postReview = e => {
     
     const FD = new FormData(e.srcElement);
     let review = {};
-    console.log('FD:');
+    //console.log('FD:');
     for([key, val] of FD){
-        console.log('key,val, typeof: ',key, val, typeof(val));
+        //console.log('key,val, typeof: ',key, val, typeof(val));
         review[key] = val ;
     }
-    review['updatedAt'] = new Date();
+    
     //post review
-    DBHelper.postReview(FD);
+    DBHelper.postReview(review);
+
     //display new review
+    review['updatedAt'] = new Date();
     fillReviewsHTML(null, [review]);
     e.srcElement.parentNode.style.display = 'none';//hide form parent li, so it can be reused later if necessary
 
@@ -244,7 +281,7 @@ createNewReviewForm = (id) => {
     restaurant_id.type = "number";
     restaurant_id.name = restaurant_id.id = "restaurant_id";
     restaurant_id.value = id;
-    console.log('typeof id', typeof(id));
+    //console.log('typeof id', typeof(id));
     restaurant_id.hidden = true;
     form.appendChild(restaurant_id);
 

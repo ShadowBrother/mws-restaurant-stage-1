@@ -50,10 +50,11 @@ class DBHelper {
                     reviewStore.createIndex('by-id', 'id');
                     reviewStore.createIndex('by-restaurant-id', 'restaurant_id');
                 case 2:
-                    let newReviewStore = upgradeDB.createObjectStore('newReviews', {
-                        keyPath: 'id'
+                    let requestsStore = upgradeDB.createObjectStore('requests', {
+                        keyPath: 'id', autoIncrement: true
                     });
-                    console.log('newReviewStore: ', newReviewStore);
+                    console.log('requests: ', requestsStore);
+                    requestsStore.createIndex('by-type', 'type');
             }
         });
     }
@@ -122,7 +123,10 @@ class DBHelper {
     static setFavorite(id, isFavorite) {
 
         fetch(`${DBHelper.RESTAURANT_URL}/${id}/?is_favorite=${isFavorite}`, { method: 'PUT' })//update is_favorite for restaurant
-        .catch(err => console.log(err));
+        .catch(err => {
+            console.log(err);
+            DBHelper.setVal('requests', {type: 'favorite',restaurant_id: id, is_favorite: isFavorite})
+        });
         
         DBHelper.getVal('restaurants', id).then(val => {//update idb
             val.is_favorite = isFavorite;
@@ -139,10 +143,11 @@ class DBHelper {
 
         fetch(DBHelper.REVIEW_URL, {
             method: 'POST',
-            body: data
+            body: JSON.stringify(data)
         }).catch(err => {
             console.log(err);
             //no connection, store form data in idb until back online
+            DBHelper.setVal('requests', { type: 'newReview',updatedAt: new Date(), data: data });
         });
     }
 
@@ -268,11 +273,11 @@ class DBHelper {
             return index.getAll(id);
         })
         .then(reviews => {
-            console.log('fetchReviewsByRestaurantId idb reviews: ', reviews);
+            //console.log('fetchReviewsByRestaurantId idb reviews: ', reviews);
             return Promise.all(reviews)
         })
         .then(reviews => {
-            console.log('fetchReviewsByRestaurantId reviews: ', reviews);
+            //console.log('fetchReviewsByRestaurantId reviews: ', reviews);
             
            if (reviews.length > 0) {//reviews in idb, callback with reviews
                 callback(null, reviews);
@@ -281,8 +286,8 @@ class DBHelper {
             return fetch(DBHelper.REVIEW_URL + `/?restaurant_id=${id}`)//fetch reviews from api
             .then(response => response.json())
             .then(json => {
-                console.log('fetchReviewsByRestaurantId fetched reviews: ', json);
-                console.log('reviews from idb', reviews);
+                //console.log('fetchReviewsByRestaurantId fetched reviews: ', json);
+                //console.log('reviews from idb', reviews);
                 if (!DBHelper.compareReviews(reviews, json)) {//fetched data contains data that wasn't in idb
                     console.log('new data fetched');
                     let changes = DBHelper.getUpdatedReviews(reviews,json);
@@ -303,7 +308,7 @@ class DBHelper {
 
     static compareReviews(idb, fetch) {
 
-        console.log("compareReviews",idb, fetch);
+        //console.log("compareReviews",idb, fetch);
         if (idb.length !== fetch.length) {
             console.log('different lengths, not the same');
             return false;
@@ -311,9 +316,9 @@ class DBHelper {
 
         for (let fetch_review of fetch) {
             let idb_review = idb.find(x => x.id === fetch_review.id);
-            console.log('fetch_review.id idb_review', fetch_review.id, idb_review);
+            //console.log('fetch_review.id idb_review', fetch_review.id, idb_review);
             if (idb_review) {//idb has a review with matching id
-                console.log("fetch update, idb update", Date(fetch_review.updatedAt), Date(idb_review.updatedAt), (Date(fetch_review.updatedAt) == Date(idb_review.updatedAt)) ? "true" : "false");
+                //console.log("fetch update, idb update", Date(fetch_review.updatedAt), Date(idb_review.updatedAt), (Date(fetch_review.updatedAt) == Date(idb_review.updatedAt)) ? "true" : "false");
                 if (Date(fetch_review.updatedAt) !== Date(idb_review.updatedAt)) return false;//different update dates
             }
             else return false;//missmatched data

@@ -14,6 +14,40 @@ if('serviceWorker' in navigator){
 }
 
 /**
+ * add online event listener to sync failed review posts/favorite changes
+ **/
+
+window.addEventListener('online', () => {
+
+    console.log('online event');
+    //reattempt to post new reviews
+    DBHelper.dbPromise.then(db => {
+        let store = db.transaction('requests', 'readonly').objectStore('requests');
+        let index = store.index('by-type', { unique: false });
+        return index.getAll('newReview');
+    }).then(requests => Promise.all(requests))
+        .then(requests => {
+            for(let request of requests){
+                DBHelper.postReview(request.data);//reattempt to post review
+                DBHelper.deleteVal('requests',request.id);//remove request from requests idb
+            }
+        }).catch(err => console.log(err));
+
+    //reattempt to put favorite status
+    DBHelper.dbPromise.then(db => {
+        let store = db.transaction('requests', 'readonly').objectStore('requests');
+        let index = store.index('by-type', { unique: false });
+        return index.getAll('favorite');
+    }).then(requests => Promise.all(requests))
+        .then(requests => {
+            for(let request of requests){
+                DBHelper.setFavorite(request.restaurant_id, request.is_favorite);//reattempt to post review
+                DBHelper.deleteVal('requests',request.id);//remove request from requests idb
+            }
+        }).catch(err => console.log(err));
+});
+
+/**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
