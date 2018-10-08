@@ -282,7 +282,30 @@ class DBHelper {
            if (reviews.length > 0) {//reviews in idb, callback with reviews
                 callback(null, reviews);
                 
+           }
+
+            //check if any pending reviews in requests idb store
+           console.log('check requests for reviews');
+            DBHelper.dbPromise.then(db => {
+               console.log('checking requests for reviews');
+               let store = db.transaction('requests', 'readonly').objectStore('requests');
+               let index = store.index('by-type', { unique: false });
+               return index.getAll('newReview');
+           })
+        .then(newReviews => {
+            //console.log('fetchReviewsByRestaurantId idb reviews: ', reviews);
+            return Promise.all(newReviews)
+        })
+        .then(newReviews => {
+            console.log('newReviews: ', newReviews);
+            if (newReviews.length > 0) {//newReviews in idb, callback with new reviews
+                console.log('fetchReviewsByRestaurantId newReviews: ', newReviews);
+
+                callback(null, newReviews.map(r => {r.data.updatedAt = r.updatedAt; return r.data;}));
             }
+        });
+
+            //fetch reviews from api
             return fetch(DBHelper.REVIEW_URL + `/?restaurant_id=${id}`)//fetch reviews from api
             .then(response => response.json())
             .then(json => {
