@@ -48,10 +48,12 @@ createHeart = function (id, favorite = false) {
   c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
 </svg>`;
     heart.setAttribute('id', `${id}`);
+    heart.firstChild.setAttribute('aria-hidden', 'true');
     heart.classList.add('favorite-button');
     let buttonText = document.createElement('span');
     buttonText.id = 'buttonText';
     buttonText.classList.add('hidden');
+
     if(favorite == true || favorite == 'true') {
         heart.firstChild.classList.add('favorite');
         buttonText.innerText = 'unfavorite';
