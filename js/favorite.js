@@ -8,7 +8,7 @@ toggleFavorite = function (e) {
         heart = heart.firstChild;//set heart to svg heart
         console.log('clicked button, set heart: ', heart);
     }
-    else if(heart.id == 'buttonText'){//check if triggerd by buttonText
+    else if(heart.classList.contains('buttonText')){//check if triggerd by buttonText
         heart = heart.parentElement.firstChild;
         console.log('clicked buttonText, set heart: ', heart);
     }
@@ -19,7 +19,7 @@ toggleFavorite = function (e) {
         
     if(heart.classList.contains('favorite')){
         heart.classList.remove('favorite');//toggle heart class to change heart icon fill
-        let buttonText = heart.parentElement.querySelector('#buttonText');
+        let buttonText = heart.parentElement.querySelector('.buttonText');
         console.log(buttonText);
         buttonText.innerText = 'favorite';
         console.log(buttonText);
@@ -29,7 +29,7 @@ toggleFavorite = function (e) {
     }
     else {        
         heart.classList.add('favorite');//toggle heart class to change heart icon fill
-        let buttonText = heart.parentElement.querySelector('#buttonText');
+        let buttonText = heart.parentElement.querySelector('.buttonText');
         console.log(buttonText);
         buttonText.innerText = 'unfavorite';
         console.log(buttonText);
@@ -51,7 +51,7 @@ createHeart = function (id, favorite = false) {
     heart.firstChild.setAttribute('aria-hidden', 'true');
     heart.classList.add('favorite-button');
     let buttonText = document.createElement('span');
-    buttonText.id = 'buttonText';
+    buttonText.classList.add('buttonText');
     buttonText.classList.add('hidden');
 
     if(favorite == true || favorite == 'true') {
