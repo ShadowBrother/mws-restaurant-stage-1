@@ -186,13 +186,31 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
-  const image = document.createElement('img');
-  image.className = 'restaurant-img';
-  image.srcVal = DBHelper.imageUrlForRestaurant(restaurant);
-  image.srcsetVal = DBHelper.imageSrcsetForRestaurant(restaurant);
-  image.alt = restaurant.name;
-  io.observe(image);
-  li.append(image);
+  const picture = document.createElement('picture');
+  
+  //create webp source
+  let webp = document.createElement('source');
+  webp.type = "image/webp";
+  webp.classList.add('webp');
+  webp.srcsetVal = DBHelper.imageSrcsetForRestaurant(restaurant, "webp");
+  
+  //create backup jpg source
+  let jpg = document.createElement('source');
+  jpg.classList.add('jpg');
+  jpg.srcsetVal= DBHelper.imageSrcsetForRestaurant(restaurant, "jpg");
+    
+  //create img
+  let img = document.createElement('img');
+  img.srcVal = DBHelper.imageUrlForRestaurant(restaurant);
+  img.className = 'restaurant-img';
+  img.alt = restaurant.name;
+
+  io.observe(picture);//observe picture for lazyLoading
+
+  picture.appendChild(webp);
+  picture.appendChild(jpg);
+  picture.appendChild(img);
+  li.append(picture);
 
   const name = document.createElement('h2');
   name.innerHTML = restaurant.name;

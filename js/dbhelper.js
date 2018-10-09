@@ -478,13 +478,13 @@ class DBHelper {
         /**
          * Restaurant image srcset.
          */
-    static imageSrcsetForRestaurant(restaurant) {
+    static imageSrcsetForRestaurant(restaurant, ext) {
         const imgSizes = [640, 768, 1024, 1366, 1600, 1920];
         const img = restaurant.photograph || restaurant.id;
         //const fileRX = /(.+)(\.[\w]{3,4})/;
         //const [,imgName, imgExt] = fileRX.exec(img);
         const imgName = img;
-        const imgExt = '.jpg';
+        const imgExt = '.' + ext;
         //console.log(imgName,imgExt);
         let imgStr = "";
         for(let size of imgSizes) {
@@ -496,13 +496,13 @@ class DBHelper {
         /**
         * Restaurant image urls.
         */
-    static imgUrlsArrayForRestaurants(restaurant) {
+    static imgUrlsArrayForRestaurants(restaurant, ext) {
         const imgSizes = [640, 768, 1024, 1366, 1600, 1920];
         const img = restaurant.photograph || restaurant.id;
         const fileRX = /(.+)(\.[\w]{3,4})/;
         //const [,imgName, imgExt] = fileRX.exec(img);
         const imgName = img;
-        const imgExt = '.jpg';
+        const imgExt = '.' + ext;
         //console.log(imgName,imgExt);
         let imgArray = [DBHelper.imageUrlForRestaurant(restaurant)];
         for(let size of imgSizes) {

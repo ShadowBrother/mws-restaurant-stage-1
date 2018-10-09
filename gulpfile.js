@@ -10,8 +10,9 @@ var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
 var browserSync = require('browser-sync').create();
 var del = require('del');
+var webp = require('gulp-webp');
 
-gulp.task('default', ['clean', 'copy', 'copy:idb', 'copy:img', 'responsiveImages', 'styles', 'concat:js']);
+gulp.task('default', ['clean', 'copy', 'copy:idb', 'copy:img', 'responsiveImages', 'webp', 'styles', 'concat:js']);
 
 gulp.task('styles', function() {
 	gulp.src('sass/**/*.scss')
@@ -119,5 +120,11 @@ gulp.task('responsiveImages', function(){
             quality:75
     }]
     }))
+    .pipe(gulp.dest('build/img/'));
+});
+
+gulp.task('webp', ['responsiveImages'], function () {
+    return gulp.src('build/img/*')
+    .pipe(webp())
     .pipe(gulp.dest('build/img/'));
 });
