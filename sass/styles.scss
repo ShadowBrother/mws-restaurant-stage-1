@@ -20,7 +20,7 @@ ul, li {
     -webkit-padding-start: 0;
 }
 a {
-	color: orange;
+	color: #FF6666;
 	text-decoration: none;
 }
 a:hover, a:focus {
@@ -42,7 +42,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   min-height: 100%;
 }
 #footer {
-  background-color: #444;
+  background-color: #2C2C35;
   color: #aaa;
   font-size: 10pt;
   letter-spacing: 1px;
@@ -91,7 +91,7 @@ nav h1 a {
 
 /* Add a color to all links inside the list */
 #breadcrumb li a {
-    color: #0275d8;
+    color: #024C8D;
     text-decoration: none;
 }
 
@@ -176,7 +176,7 @@ nav h1 a {
   min-width: 100%;
 }
 #restaurants-list li h2 {
-  color: #f18200;
+  color: #990000;
   font-family: Arial,sans-serif;
   font-size: 17pt;
   font-weight: 200;
@@ -190,7 +190,7 @@ nav h1 a {
   font-size: 14pt;
 }
 #restaurants-list li a {
-  background-color: orange;
+  background-color: #990000;
   border-bottom: 3px solid #eee;
   color: #fff;
   display: inline-block;
@@ -230,7 +230,8 @@ nav h1 a {
   box-sizing: border-box;
 }
 #restaurant-name {
-  color: #f18200;
+  //color: #f18200;
+  color: #990000;
   font-family: Arial,sans-serif;
   font-size: 20pt;
   font-weight: 200;
@@ -268,7 +269,8 @@ nav h1 a {
   padding: 30px 40px 80px;
 }
 #reviews-container h2 {
-  color: #f58500;
+  //color: #f58500;
+  color: #990000 ;
   font-size: 24pt;
   font-weight: 300;
   letter-spacing: -1px;
@@ -298,7 +300,7 @@ nav h1 a {
 
 .review-button {//use same styling as View Detail links from restaurant-list
 
-  background-color: orange;
+  background-color: #990000;
   border-bottom: 3px solid #eee;
   color: #fff;
   display: inline-block;
