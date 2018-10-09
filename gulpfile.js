@@ -43,7 +43,7 @@ gulp.task('clean', function(){
 
 
 gulp.task('concat:main', function(){
-    return gulp.src(['js/dbhelper.js','js/favorite.js', 'js/main.js'])
+    return gulp.src(['js/dbhelper.js','js/lazyLoad.js', 'js/favorite.js', 'js/main.js'])
         .pipe(concat('main.js'))
         .pipe(gulp.dest('build/js/'));
 });
