@@ -26,19 +26,19 @@ self.addEventListener('install', event => {
 
         }).then(caches.open(mapCache).then(cache => fetch(mapUrl, { mode: 'no-cors' })
             .then(response => { return cache.put(mapUrl, response); })))
-        .then(caches.open(imgCache).then(cache => {
+        /*.then(caches.open(imgCache).then(cache => {
             return DBHelper.FetchRestaurants().then(json => {
                 let restaurants = json;
                 //console.log('cache imgs, restaurants: ', restaurants);
                 let imgCacheStr = restaurants.map(restaurant => {
-                    let imgUrls = DBHelper.imgUrlsArrayForRestaurants(restaurant);
+                    let imgUrls = DBHelper.imgUrlsArrayForRestaurants(restaurant, 'webp');
                     //console.log(`cache imgs, ${restaurant}: ${imgUrls}`);
                     return imgUrls;
                 }).reduce((a, b) => a.concat(b));
                 //console.log(imgCacheStr);
                 return cache.addAll(imgCacheStr);
             });
-        })).catch(err => console.log(err)));});
+        }))*/.catch(err => console.log(err)));});
 
 self.addEventListener('activate', event => {
     console.log('service worker activating');
@@ -56,12 +56,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
     //console.log('service worker fetching');
     let requestUrl = new URL(event.request.url);
-
-    //avoid devtools bug error
-   /* if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
-        return;
-    }
-    */
+        
     //console.log("request origin", requestUrl.origin);
     if (requestUrl.origin === location.origin) {
         if (requestUrl.pathname.startsWith('/img/')) {
