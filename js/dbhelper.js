@@ -116,6 +116,27 @@ class DBHelper {
         });
     }
 
+    /*
+     * getAll entries from storeName, options: {id, index, unique}
+     */
+    static getAll(storeName, options = {id: "", index: "", unique: false}){
+        return DBHelper.dbPromise.then(db => {
+            let store = db.transaction(storeName, 'readonly').objectStore(storeName);
+            if(options && options.index){
+                let unique = (options.unique === true || options.unique === "true")?true:false;
+                let index = store.index(options.index, { unique: options.unique });
+                return index.getAll(options.id);
+            }
+            return store.getAll(options.id);
+            
+        })
+        .then(res => {
+            //console.log('fetchReviewsByRestaurantId idb reviews: ', reviews);
+            return Promise.all(res)
+        });
+        
+    }
+
     /**
      * Set restaurant favorite status
      */
@@ -156,22 +177,13 @@ class DBHelper {
     */
     static fetchRestaurants(callback) {
         
-       
-        let keys = DBHelper.getKeys('restaurants');
-        console.log("keys: ", keys);
-        
-        let vals = keys.then(keys => keys.map(key => DBHelper.getVal('restaurants', key)));
-        //console.log("vals: ", vals);
-        vals.then(vals => {
-            if (vals.length > 0) {//restaurant data is in idb
+        DBHelper.getAll('restaurants').then(restaurants => {
+            if (restaurants.length > 0) {//restaurant data is in idb
                 //console.log('fetchRestaurants returning from idb ', vals);
-                
-                Promise.all(vals).then(vals => {
-                    callback(null, vals);//use data in callback
-
-                });
+                 callback(null, restaurants);//use data in callback
 
             }//still fetch data, in case more/newer data in api
+            
             return fetch(DBHelper.RESTAURANT_URL)//fetch data from api, store in idb
             .then(response => {
                 //console.log("fetchRestuarants: ",response.clone().json());

@@ -51,8 +51,30 @@ window.addEventListener('online', () => {
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  fetchNeighborhoods();
-  fetchCuisines();
+  //fetchNeighborhoods();
+    //fetchCuisines();
+    //reduce calls to fetchRestaurants, by fetching restaurants once and filtering for cuisines and neighborhoods from the same results
+    DBHelper.fetchRestaurants((err,restaurants) => {
+        if(err){
+            console.log(err);
+            return;
+        }
+        console.log("DOMContentLoaded restaurants", restaurants );
+
+        //move logic from fetchCuisines/Neighborhoods here, so they can share restaurant data
+
+      // Get all cuisines from all restaurants
+      const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type);
+      // Remove duplicates from cuisines
+      const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i);
+      // Get all neighborhoods from all restaurants
+      const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood);
+      // Remove duplicates from neighborhoods
+      const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i);
+      //Call fill cuisines/neighborhoods HTML directly with data
+      fillCuisinesHTML(uniqueCuisines);
+      fillNeighborhoodsHTML(uniqueNeighborhoods);
+  });
 });
 
 /**
