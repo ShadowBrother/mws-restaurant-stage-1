@@ -2,7 +2,7 @@
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
 
-## Project Overview: Stage 2
+## Project Overview: Stage 3
 
 For the **Restaurant Reviews** projects, I incrementally converted a static webpage to a mobile-ready web application. In 
 **Stage One**, I took a static design that lacks accessibility and converted the design to be responsive on different sized 
@@ -11,6 +11,11 @@ offline experience for users.
 
 For **Stage Two**, I made use of given sails API server to fetch data, and cached responses using IndexedDB as well as
 making necessary changes for site to pass lighthouse audit
+
+For **Stage Three**, I made use of the new sails API to fetch reviews from separate endpoints and implemented a form
+for creating new reviews. I also added a heart icon button that toggles favorite/not favorite status. Both of these features
+work offline, updating the page and then storing the data in IDB to be used while offline and then sent to the server when
+the page reconnects to the internet. Additional steps taken to reach new lighthouse audit targets.
 
 ### How to run
 
