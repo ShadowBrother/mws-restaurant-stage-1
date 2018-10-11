@@ -349,8 +349,10 @@ createNewReviewForm = (id) => {
     button.type = "submit";
     button.classList.add("review-button");
     button.value = "Submit Review";
-
-    form.appendChild(button);
+    
+    p = document.createElement('p');
+    p.appendChild(button);
+    form.appendChild(p);
 
     li.appendChild(form);
     return li;
