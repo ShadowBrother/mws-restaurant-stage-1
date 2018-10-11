@@ -184,7 +184,7 @@ class DBHelper {
 
             }//still fetch data, in case more/newer data in api
             
-            return fetch(DBHelper.RESTAURANT_URL)//fetch data from api, store in idb
+            requestIdleCallback(() => { return fetch(DBHelper.RESTAURANT_URL)//fetch data from api, store in idb
             .then(response => {
                 //console.log("fetchRestuarants: ",response.clone().json());
                 return response.json();
@@ -193,12 +193,13 @@ class DBHelper {
                 //console.log("fetchRestaurants .then json: ", json);
                 callback(null, json);
                 for (let restaurant of json) {
-                    //console.log(`putting ${restaurant.name} in idb: `, restaurant);
+                //console.log(`putting ${restaurant.name} in idb: `, restaurant);
                     DBHelper.setVal('restaurants', restaurant);
                 }
                 
             })
             .catch(err => callback(err, null));
+            });
         });
         
     }
